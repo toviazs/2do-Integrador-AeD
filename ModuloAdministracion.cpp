@@ -23,14 +23,22 @@ Ricardo.Posse@alu.frt.utn.edu.ar
 
 struct datosVete{
 	
-    char nomyApe[80];
+    char nomyApe[60];
     int matricula;
     int DNI;
     char telefono[25];
 };
+struct datosUsu{
+	
+	char usuario[10];
+	char contrasenia[10];
+	char nomyApe[60];
+
+};
 
 // Prototipos
 void registrarVeterinario (FILE *arch1);
+void registrarUsuario(FILE *arch1);
 
 main()
 {
@@ -72,11 +80,14 @@ main()
         case 1:
         {
             system("cls");
-            registrarVeterinario (arch1);
+            registrarVeterinario(arch1);
             break;
         }
         case 2:
         {
+        	system("cls");
+        	registrarUsuario(arch1);
+        	break;
 
         }
         case 3:
@@ -116,5 +127,34 @@ void registrarVeterinario(FILE *arch1)
 	fwrite(&reg,sizeof(reg),1,arch1);
 	
 	printf ("\n----Veterinario agregado con exito----");
+	
+	printf ("\n\n");
+	system ("pause");
 }
-
+void registrarUsuario(FILE *arch1)
+{
+	datosUsu reg1;
+	
+	printf("\tR E G I S T R A R  U S U A R I O");
+	
+	printf("\n========================================\n");
+	
+	printf ("\nIngrese Usuario: ");
+	_flushall();
+	gets(reg1.usuario);
+	
+	printf ("\nIngrese contrasenia: ");
+	_flushall();
+	gets(reg1.contrasenia);
+	
+	printf("\nIngrese Nombre y apellido: ");
+	_flushall();
+	gets(reg1.nomyApe);
+	
+	fwrite(&reg1,sizeof(reg1),1,arch1);
+	
+	printf ("\n----Usuario agregado con exito----");
+	
+	printf ("\n\n");
+	system ("pause");
+}
