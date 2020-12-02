@@ -64,10 +64,12 @@ struct mascota
 };
 
 //P R O T O T I P O S
-void AgregarMascota(fecha Fecha[TAMANO], mascota Mascota[TAMANO], int &indice);
+void AgregarMascota(mascota vec[TAMANO], int &indice);
+void ListarAnimales(mascota vec[TAMANO], int &indice);
 
 main()
 {
+    int opcion;
     int idx = 0;
     int caso = 0;
     setlocale(LC_ALL, "");
@@ -77,6 +79,7 @@ main()
     mascota reg4[TAMANO];
     do
     {
+        
         printf("M ó d u l o  d e  A s i s t e n c i a\n");
         printf("===========================================\n\n");
 
@@ -99,7 +102,20 @@ main()
         case 2:
         {
             system("cls");
-            AgregarMascota(reg, reg4, idx);
+            AgregarMascota(reg4, idx);
+            printf("\n¿Desea ver el listado? (1- SI / 0- NO)");
+            scanf("%d", &opcion);
+
+            if(opcion == 1)
+            {
+                ListarAnimales(reg4, idx);
+            }
+            if((opcion < -1) || (opcion > 1))
+            {
+                printf("ERROR. INGRESE UNA OPCIÓN VALIDA");
+            }
+            
+
             break;
         }
         case 3:
@@ -113,47 +129,66 @@ main()
         }
 
     } while (caso != 5);
+
 }
-void AgregarMascota(fecha Fecha[TAMANO], mascota Mascota[TAMANO], int &indice)
+
+void AgregarMascota(mascota vec[TAMANO], int &indice)
 {
+    system("cls");
     printf("\tR E G I S T R A R  M A S C O T A");
     
     printf("\n========================================\n");
     
     printf("Ingrese el nombre de la mascota: ");
     _flushall();
-    gets(Mascota[indice].nombre);
+    gets(vec[indice].nombre);
     
     printf("\nIngrese la dirección: ");
     _flushall();
-    gets(Mascota[indice].direcc);
+    gets(vec[indice].direcc);
     
     printf("\nIngrese el DNI del dueño: ");
-    scanf("%d",&Mascota[indice].DNI_DUENIO);
+    scanf("%d",&vec[indice].DNI_DUENIO);
     
     printf("\nIngrese la localidad: ");
     _flushall();
-    gets(Mascota[indice].localidad);
+    gets(vec[indice].localidad);
     
     printf("\nIngrese la fecha de ingreso: ");
     
     printf("\nDIA: ");
-    scanf("%d", &Fecha[indice].dia);
+    scanf("%d", &vec[indice].Fecha.dia);
     
     printf("\nMES: ");
-    scanf("%d", &Fecha[indice].mes);
+    scanf("%d", &vec[indice].Fecha.mes);
     
     printf("\nAÑO: ");
-    scanf("%d", &Fecha[indice].anio);
+    scanf("%d", &vec[indice].Fecha.anio);
     
     printf("\nIngrese el peso de la mascota: ");
-    scanf("%f", &Mascota[indice].peso);
+    scanf("%f", &vec[indice].peso);
     
     printf("\nIngrese el numero de teléfono: ");
     _flushall();
-    gets(Mascota[indice].numeroTel);
+    gets(vec[indice].numeroTel);
     
     indice++;
 }
 
- 
+void ListarAnimales(mascota vec[TAMANO], int &indice)
+{
+    for (int i = 1; i <= indice; i++)
+    {
+        system("cls");
+        printf("\tL I S T A R  M A S C O T A S");
+        printf("\n========================================\n");
+        printf("Nombre de la Mascota: %s\n", vec[i].nombre);
+        printf("Dirección: %s", vec[i].direcc);
+        printf("\nDNI del dueño: %d", vec[i].DNI_DUENIO);
+        printf("\nLocalidad: %s", vec[i].localidad);
+        printf("FECHA: \nDÍA: %d\nMES: %d\nAÑO: %d", vec[i].Fecha.dia, vec[i].Fecha.mes, vec[i].Fecha.anio);
+        printf("\nPeso de la Mascota: %.2f", vec[i].peso);
+        printf("\nNumero de teléfono: %s", vec[i].numeroTel);
+        printf("\n\n========================================\n");
+    }
+}
