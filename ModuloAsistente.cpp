@@ -39,7 +39,7 @@ struct turnos
 {
     int matricula;
     fecha fec;
-    int DNIdueño;
+    int DNIduenio;
     char atencion [380];
 };
 
@@ -74,6 +74,7 @@ struct mascota
 void AgregarMascota(FILE *archi, int &indice);
 void ListarAnimales(mascota vec[TAMANO], int &indice);
 void RegistrarTurno(FILE *archi, int &indice);
+void ListarTurno(FILE *archi, int &indice);
 
 main()
 {
@@ -130,12 +131,12 @@ main()
         printf("M ó d u l o  d e  A s i s t e n c i a\n");
         printf("===========================================\n\n");
 
-        printf("1.- I n i c i a r  S e s i ó n\n");
-        printf("2.- R e g i s t r a r  M a s c o t a\n");
-        printf("3.- R e g i s t r a r  T u r n o\n");
-        printf("4.- L i s t a d o  d e  A t e n c i o n e s  p o r  V e t e r i n a r i o  y  F e c h a\n\n");
+        printf("1.- I n i c i a r   S e s i ó n\n");
+        printf("2.- R e g i s t r a r   M a s c o t a\n");
+        printf("3.- R e g i s t r a r   T u r n o\n");
+        printf("4.- L i s t a d o  d e   A t e n c i o n e s   p o r   V e t e r i n a r i o   y   F e c h a\n\n");
 
-        printf("5.- C e r r a r  l a  a p l i c a c i ó n\n\n");
+        printf("5.- C e r r a r   l a   a p l i c a c i ó n\n\n");
         printf("===========================================\n\n");
         printf("> Selección: ");
         scanf("%d", &caso);
@@ -174,7 +175,9 @@ main()
         }
         case 4:
         {
+            ListarTurno(archivo2, idxTurnos);
             
+            break;
         }
         }
 
@@ -265,7 +268,7 @@ void RegistrarTurno(FILE *archi, int &indice)
     scanf("%d", &reg[indice].fec.anio);
 
     printf("\n\nDNI Dueño: ");
-    scanf("%d", &reg[indice].DNIdueño);
+    scanf("%d", &reg[indice].DNIduenio);
 
     printf("\nDetalle de Atencion: ");
     scanf("%s", reg[indice].atencion);
@@ -273,4 +276,31 @@ void RegistrarTurno(FILE *archi, int &indice)
     fseek(archi, 0, SEEK_END);
 
     fwrite(&reg, sizeof(reg), 1, archi);
+}
+
+void ListarTurno(FILE *archi, int &indice)
+{
+    turnos reg[TAMANO];
+
+    rewind(archi);
+
+    fseek(archi, 0, SEEK_END);
+    fread(&reg, sizeof(reg), 1, archi);
+
+    while(!feof (archi))
+    {
+    	system("cls");
+        printf("\tL I S T A D O S   D E   T U R N O S");
+        printf("\n=============================================\n");
+        printf("\nFecha de Turno \n");
+        printf("Día: %d", reg[indice].fec.dia);
+        printf("\nMes: %d", reg[indice].fec.mes);
+        printf("\nAño: %d", reg[indice].fec.anio);
+        printf("\nDNI: %d", reg[indice].DNIduenio);
+        printf("\nDetalles: %s", reg[indice].atencion);
+
+        fread(&reg, sizeof(reg), 1, archi);
+    }
+
+   fclose(archi);
 }
