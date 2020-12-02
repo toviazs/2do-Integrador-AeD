@@ -3,6 +3,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <locale.h>
+#include <conio.h>
 
 /*
 Universidad Tecnologica Nacional
@@ -40,7 +41,7 @@ struct turnos
     int matricula;
     fecha fec;
     int DNIduenio;
-    char atencion [380];
+    char atencion[380];
 };
 
 struct datosUsuario
@@ -48,7 +49,6 @@ struct datosUsuario
     char usuario[10];
     char contrasena[10];
     char ApeyNom[60];
-
 };
 
 struct datosVete
@@ -56,7 +56,7 @@ struct datosVete
     char nomyApe[80];
     int matricula;
     int DNI;
-    char telefono [25];
+    char telefono[25];
 };
 
 struct mascota
@@ -78,22 +78,20 @@ void ListarTurno(FILE *archi, int &indice);
 
 main()
 {
-    FILE *archivo;
-    FILE *archivo2;
-    int opcion;
-    int idx = 0;
-    int idxTurnos = 0;
-    int caso = 0;
+    FILE *archivo, *archivo2;
+    int opcion, idx = 0, idxTurnos = 0, caso = 0;
     setlocale(LC_ALL, "");
     fecha reg[TAMANO];
     datosUsuario reg2[TAMANO];
     datosVete reg3[TAMANO];
     mascota reg4[TAMANO];
-    
-    
+
+    archivo = fopen("Mascotas.dat", "r+b");
+
     if (archivo == NULL)
     {
-        printf("El arcivo Mascotas.dat no existe. Se intentara crearlo.\n\n");
+        printf("El archivo Mascotas.dat no existe. Se intentara crearlo...\n\n");
+        getch();
         archivo = fopen("Mascotas.dat", "w+b");
 
         if (archivo == NULL)
@@ -103,31 +101,43 @@ main()
         }
 
         printf("El archivo se creo exitosamente.\n");
-        system("pause");
+        getch();
+    }
+    else
+    {
+        printf("El archivo fue abierto correctamente...");
+        getch();
     }
 
-    
     archivo2 = fopen("Turnos.dat", "r+b");
 
-    if (archivo == NULL)
+    if (archivo2 == NULL)
     {
-        printf("El arcivo Turnos.dat no existe. Se intentara crearlo.\n\n");
-        archivo = fopen("Turnos.dat", "w+b");
+        printf("El archivo Turnos.dat no existe. Se intentara crearlo.\n\n");
+        archivo2 = fopen("Turnos.dat", "w+b");
 
-        if (archivo == NULL)
+        if (archivo2 == NULL)
         {
             printf("Error. No se pudo crear");
             exit(1);
         }
 
         printf("El archivo se creo exitosamente.\n");
-        system("pause");
+        getch();
+    }
+    else
+    {
+        printf("El archivo Turnos.dat fue abierto correctamente...");
+        getch();
     }
 
+    fclose(archivo2);
+    fclose(archivo);
 
     do
     {
-        
+        system("cls");
+
         printf("M ó d u l o  d e  A s i s t e n c i a\n");
         printf("===========================================\n\n");
 
@@ -146,43 +156,40 @@ main()
         switch (caso)
         {
         case 1:
-        {
 
-        }
+            break;
+
         case 2:
-        {
+
             AgregarMascota(archivo, idx);
             printf("\n¿Desea ver el listado? (1- SI / 0- NO)");
             scanf("%d", &opcion);
 
-            if(opcion == 1)
+            if (opcion == 1)
             {
                 ListarAnimales(reg4, idx);
             }
-            if((opcion < -1) || (opcion > 1))
+            if ((opcion < -1) || (opcion > 1))
             {
                 printf("ERROR. INGRESE UNA OPCIÓN VALIDA");
             }
-            
 
             break;
-        }
+
         case 3:
-        {
+
             printf("Registrar Turnos");
             RegistrarTurno(archivo2, idxTurnos);
             break;
-        }
+
         case 4:
-        {
+
             ListarTurno(archivo2, idxTurnos);
-            
+
             break;
-        }
         }
 
     } while (caso != 5);
-
 }
 
 void AgregarMascota(FILE *archi, int &indice)
@@ -191,42 +198,42 @@ void AgregarMascota(FILE *archi, int &indice)
 
     system("cls");
     printf("\tR E G I S T R A R  M A S C O T A");
-    
+
     printf("\n========================================\n");
-    
+
     printf("Ingrese el nombre de la mascota: ");
     _flushall();
     gets(vec[indice].nombre);
-    
+
     printf("\nIngrese la dirección: ");
     _flushall();
     gets(vec[indice].direcc);
-    
+
     printf("\nIngrese el DNI del dueño: ");
-    scanf("%d",&vec[indice].DNI_DUENIO);
-    
+    scanf("%d", &vec[indice].DNI_DUENIO);
+
     printf("\nIngrese la localidad: ");
     _flushall();
     gets(vec[indice].localidad);
-    
+
     printf("\nIngrese la fecha de ingreso: ");
-    
+
     printf("\nDIA: ");
     scanf("%d", &vec[indice].Fecha.dia);
-    
+
     printf("\nMES: ");
     scanf("%d", &vec[indice].Fecha.mes);
-    
+
     printf("\nAÑO: ");
     scanf("%d", &vec[indice].Fecha.anio);
-    
+
     printf("\nIngrese el peso de la mascota: ");
     scanf("%f", &vec[indice].peso);
-    
+
     printf("\nIngrese el numero de teléfono: ");
     _flushall();
     gets(vec[indice].numeroTel);
-    
+
     indice++;
 
     fseek(archi, 0, SEEK_END);
@@ -271,7 +278,8 @@ void RegistrarTurno(FILE *archi, int &indice)
     scanf("%d", &reg[indice].DNIduenio);
 
     printf("\nDetalle de Atencion: ");
-    scanf("%s", reg[indice].atencion);
+    _flushall();
+    gets(reg[indice].atencion);
 
     fseek(archi, 0, SEEK_END);
 
@@ -280,27 +288,30 @@ void RegistrarTurno(FILE *archi, int &indice)
 
 void ListarTurno(FILE *archi, int &indice)
 {
-    turnos reg[TAMANO];
+    archi = fopen("Turnos.dat", "r+b");
+    turnos reg;
 
-    rewind(archi);
+    fread(&reg, sizeof(turnos), 1, archi);
 
-    fseek(archi, 0, SEEK_END);
-    fread(&reg, sizeof(reg), 1, archi);
+    system("cls");
+    printf("\tL I S T A D O S   D E   T U R N O S");
+    printf("\n=============================================\n");
 
-    while(!feof (archi))
+    while (!feof(archi))
     {
-    	system("cls");
-        printf("\tL I S T A D O S   D E   T U R N O S");
-        printf("\n=============================================\n");
-        printf("\nFecha de Turno \n");
-        printf("Día: %d", reg[indice].fec.dia);
-        printf("\nMes: %d", reg[indice].fec.mes);
-        printf("\nAño: %d", reg[indice].fec.anio);
-        printf("\nDNI: %d", reg[indice].DNIduenio);
-        printf("\nDetalles: %s", reg[indice].atencion);
+        if (!feof(archi))
+        {
+            printf("\nFecha de Turno \n");
+            printf("Día: %d", reg.fec.dia);
+            printf("\nMes: %d", reg.fec.mes);
+            printf("\nAño: %d", reg.fec.anio);
+            printf("\nDNI: %d", reg.DNIduenio);
+            printf("\nDetalles: %s", reg.atencion);
 
-        fread(&reg, sizeof(reg), 1, archi);
+            fread(&reg, sizeof(turnos), 1, archi);
+        }
     }
+    getch();
 
-   fclose(archi);
+    fclose(archi);
 }
