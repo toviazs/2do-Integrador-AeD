@@ -1,15 +1,22 @@
+<<<<<<< HEAD
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>
 
+=======
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <conio.h>
+>>>>>>> 06ae6296a102872ced518958adb331cc3642c4ee
 /*
 Universidad Tecnologica Nacional
 Facultad Regional Tucuman
 Ingenieria en Sistemas de Informacion
-Paz Posse Tobías	
+Paz Posse Tobï¿½as	
 43562927
 Tobias.PazPosse@alu.frt.utn.edu.ar
-Pérez Lucas Gustavo
+Pï¿½rez Lucas Gustavo
 43564887
 lucas.perez@alu.frt.utn.edu.ar
 Paz Bruno Leonel
@@ -20,6 +27,7 @@ Posse Ricardo
 Ricardo.Posse@alu.frt.utn.edu.ar
 */
 
+<<<<<<< HEAD
 struct datosVete{
 	
     char nomyApe[60];
@@ -29,23 +37,40 @@ struct datosVete{
 };
 struct datosUsuAsist{
 	
+=======
+struct datosVete
+{
+
+	char nomyApe[60];
+	int matricula;
+	int DNI;
+	char telefono[25];
+};
+struct datosUsu
+{
+
+>>>>>>> 06ae6296a102872ced518958adb331cc3642c4ee
 	char usuario[10];
 	char contrasenia[10];
 	char nomyApe[60];
-
 };
 
 // Prototipos
+<<<<<<< HEAD
 void registrarVeterinario (FILE *arch1);
 void registrarUsuarioAsistente(FILE *arch1);
 
+=======
+void registrarVeterinario(FILE *arch1);
+void registrarUsuario(FILE *arch1);
+>>>>>>> 06ae6296a102872ced518958adb331cc3642c4ee
 
 main()
 {
 	FILE *arch1;
-    int caso = 0; 
-	
-	arch1=fopen("Veterinarios.dat.","r+b");
+	int caso = 0;
+
+	arch1 = fopen("Veterinarios.dat.", "r+b");
 	if (arch1 == NULL)
 	{
 		printf("El archivo Veterinarios.dat no existe. Se intentara crearlo...\n");
@@ -58,6 +83,7 @@ main()
 		printf("El archivo se creo exitosamente...\n\n");
 		system("pause");
 	}
+<<<<<<< HEAD
    
     do
     {
@@ -102,37 +128,80 @@ main()
 
     } while (caso != 5);
 } 
+=======
+
+	do
+	{
+		system("cls");
+		printf("Modulo del Asistente\n");
+		printf("======================\n\n");
+
+		printf("1.- Registrar Veterinario\n");
+		printf("2.- Registrar Usuario Asistente\n");
+		printf("3.- Atenciones por Veterinarios\n");
+		printf("4.- Ranking de Veterinarios por Atenciones\n\n");
+
+		printf("5.- Cerrar la aplicacion\n\n");
+
+		printf("> ");
+		scanf("%d", &caso);
+
+		switch (caso)
+		{
+		case 1:
+		{
+			system("cls");
+			registrarVeterinario(arch1);
+			break;
+		}
+		case 2:
+		{
+			system("cls");
+			registrarUsuario(arch1);
+			break;
+		}
+		case 3:
+		{
+		}
+		case 4:
+		{
+		}
+		}
+
+	} while (caso != 5);
+}
+>>>>>>> 06ae6296a102872ced518958adb331cc3642c4ee
 void registrarVeterinario(FILE *arch1)
 {
 	datosVete reg;
 	printf("\tR E G I S T R A R  V E T E R I N A R I O");
-	
+
 	printf("\n========================================\n");
-	
 
-	printf ("\nIngrese nombre y apellido: ");
+	printf("\nIngrese nombre y apellido: ");
 	_flushall();
-	gets (reg.nomyApe);
-	
-	printf ("\nIngrese numero de matricula: ");
-	scanf("%d",&reg.matricula);
-	
-	printf("\nIngrese DNI: ");
-	scanf ("%d",&reg.DNI);
+	gets(reg.nomyApe);
 
-	printf ("\nIngrese telefono: ");
+	printf("\nIngrese numero de matricula: ");
+	scanf("%d", &reg.matricula);
+
+	printf("\nIngrese DNI: ");
+	scanf("%d", &reg.DNI);
+
+	printf("\nIngrese telefono: ");
 	_flushall();
 	gets(reg.telefono);
-	
-	fwrite(&reg,sizeof(reg),1,arch1);
-	
-	printf ("\n----Veterinario agregado con exito----");
-	
-	printf ("\n\n");
-	system ("pause");
+
+	fwrite(&reg, sizeof(reg), 1, arch1);
+
+	printf("\n----Veterinario agregado con exito----");
+
+	printf("\n\n");
+	system("pause");
 }
 void registrarUsuarioAsistente(FILE *arch1)
 {
+<<<<<<< HEAD
 	datosUsuAsist reg1;
 	
 	printf("\tR E G I S T R A R  U S U A R I O A S I S T E N T E");
@@ -140,22 +209,31 @@ void registrarUsuarioAsistente(FILE *arch1)
 	printf("\n========================================\n");
 	
 	printf ("\nIngrese Nombre de Usuario: ");
+=======
+	datosUsu reg1;
+
+	printf("\tR E G I S T R A R  U S U A R I O");
+
+	printf("\n========================================\n");
+
+	printf("\nIngrese Usuario: ");
+>>>>>>> 06ae6296a102872ced518958adb331cc3642c4ee
 	_flushall();
 	gets(reg1.usuario);
-	
-	printf ("\nIngrese contrasenia: ");
+
+	printf("\nIngrese contrasenia: ");
 	_flushall();
 	gets(reg1.contrasenia);
-	
+
 	printf("\nIngrese Nombre y apellido: ");
 	_flushall();
 	gets(reg1.nomyApe);
-	
-	fwrite(&reg1,sizeof(reg1),1,arch1);
-	
-	printf ("\n----Usuario agregado con exito----");
-	
-	printf ("\n\n");
-	system ("pause");
+
+	fwrite(&reg1, sizeof(reg1), 1, arch1);
+
+	printf("\n----Usuario agregado con exito----");
+
+	printf("\n\n");
+	system("pause");
 }
 
