@@ -33,10 +33,10 @@ main()
         printf("Modulo del Asistente\n");
         printf("======================\n\n");
 
-        printf("1.- Iniciar Sesión\n");
-        printf("2.- Registrar Mascota\n");
-        printf("3.- Registrar Turno\n");
-        printf("4.- Listado de Atenciones por Veterinario y Fecha\n\n");
+        printf("1.- Registrar Veterinario\n");
+        printf("2.- Registrar Usuario Asistente\n");
+        printf("3.- Atenciones por Veterinarios\n");
+        printf("4.- Ranking de Veterinarios por Atenciones\n\n");
 
         printf("5.- Cerrar la aplicacion\n\n");
         
