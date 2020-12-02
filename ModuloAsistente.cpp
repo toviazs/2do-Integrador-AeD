@@ -63,52 +63,8 @@ struct mascota
     char numeroTel[25];
 };
 
-
-void AgregarMascota(fecha Fecha[TAMANO], mascota Mascota[TAMANO], int &indice)
-{
-    printf("\tR E G I S T R A R  M A S C O T A");
-    
-    printf("\n========================================\n");
-    
-    printf("Ingrese el nombre de la mascota: ");
-    _flushall();
-    gets(Mascota[indice].nombre);
-    
-    printf("\nIngrese la dirección: ");
-    _flushall();
-    gets(Mascota[indice].direcc);
-    
-    printf("\nIngrese el DNI del dueño: ");
-    scanf("%d",&Mascota[indice].DNI_DUENIO);
-    
-    printf("\nIngrese la localidad: ");
-    _flushall();
-    gets(Mascota[indice].localidad);
-    
-    printf("\nIngrese la fecha de ingreso: ");
-    
-    printf("\nDIA: ");
-    scanf("%d", &Fecha[indice].dia);
-    
-    printf("\nMES: ");
-    scanf("%d", &Fecha[indice].mes);
-    
-    printf("\nAÑO: ");
-    scanf("%d", &Fecha[indice].anio);
-    
-    printf("\nIngrese el peso de la mascota: ");
-    scanf("%f", &Mascota[indice].peso);
-    
-    printf("\nIngrese el numero de teléfono: ");
-    _flushall();
-    gets(Mascota[indice].numeroTel);
-    
-    indice++;
-}
-
-
-
-
+//P R O T O T I P O S
+void AgregarMascota(fecha Fecha[TAMANO], mascota Mascota[TAMANO], int &indice);
 
 main()
 {
@@ -158,3 +114,46 @@ main()
 
     } while (caso != 5);
 }
+void AgregarMascota(fecha Fecha[TAMANO], mascota Mascota[TAMANO], int &indice)
+{
+    printf("\tR E G I S T R A R  M A S C O T A");
+    
+    printf("\n========================================\n");
+    
+    printf("Ingrese el nombre de la mascota: ");
+    _flushall();
+    gets(Mascota[indice].nombre);
+    
+    printf("\nIngrese la dirección: ");
+    _flushall();
+    gets(Mascota[indice].direcc);
+    
+    printf("\nIngrese el DNI del dueño: ");
+    scanf("%d",&Mascota[indice].DNI_DUENIO);
+    
+    printf("\nIngrese la localidad: ");
+    _flushall();
+    gets(Mascota[indice].localidad);
+    
+    printf("\nIngrese la fecha de ingreso: ");
+    
+    printf("\nDIA: ");
+    scanf("%d", &Fecha[indice].dia);
+    
+    printf("\nMES: ");
+    scanf("%d", &Fecha[indice].mes);
+    
+    printf("\nAÑO: ");
+    scanf("%d", &Fecha[indice].anio);
+    
+    printf("\nIngrese el peso de la mascota: ");
+    scanf("%f", &Mascota[indice].peso);
+    
+    printf("\nIngrese el numero de teléfono: ");
+    _flushall();
+    gets(Mascota[indice].numeroTel);
+    
+    indice++;
+}
+
+ 
