@@ -1,7 +1,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>
-#include<conio.h>
+
 /*
 Universidad Tecnologica Nacional
 Facultad Regional Tucuman
@@ -20,7 +20,6 @@ Posse Ricardo
 Ricardo.Posse@alu.frt.utn.edu.ar
 */
 
-
 struct datosVete{
 	
     char nomyApe[60];
@@ -28,7 +27,7 @@ struct datosVete{
     int DNI;
     char telefono[25];
 };
-struct datosUsu{
+struct datosUsuAsist{
 	
 	char usuario[10];
 	char contrasenia[10];
@@ -38,7 +37,8 @@ struct datosUsu{
 
 // Prototipos
 void registrarVeterinario (FILE *arch1);
-void registrarUsuario(FILE *arch1);
+void registrarUsuarioAsistente(FILE *arch1);
+
 
 main()
 {
@@ -86,7 +86,7 @@ main()
         case 2:
         {
         	system("cls");
-        	registrarUsuario(arch1);
+        	registrarUsuarioAsistente(arch1);
         	break;
 
         }
@@ -131,15 +131,15 @@ void registrarVeterinario(FILE *arch1)
 	printf ("\n\n");
 	system ("pause");
 }
-void registrarUsuario(FILE *arch1)
+void registrarUsuarioAsistente(FILE *arch1)
 {
-	datosUsu reg1;
+	datosUsuAsist reg1;
 	
-	printf("\tR E G I S T R A R  U S U A R I O");
+	printf("\tR E G I S T R A R  U S U A R I O A S I S T E N T E");
 	
 	printf("\n========================================\n");
 	
-	printf ("\nIngrese Usuario: ");
+	printf ("\nIngrese Nombre de Usuario: ");
 	_flushall();
 	gets(reg1.usuario);
 	
@@ -158,3 +158,4 @@ void registrarUsuario(FILE *arch1)
 	printf ("\n\n");
 	system ("pause");
 }
+
