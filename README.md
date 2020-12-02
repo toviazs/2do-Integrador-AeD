@@ -2,7 +2,9 @@
 
 # Cátedra de Algoritmos y Estructuras de Datos
 
-![UTN-FRT](https://upload.wikimedia.org/wikipedia/en/b/bd/UTN.png)
+<p align="center">
+<img src="https://upload.wikimedia.org/wikipedia/en/b/bd/UTN.png"/>
+</p>
 
 ## Introducción
 
