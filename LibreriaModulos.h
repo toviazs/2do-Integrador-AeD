@@ -94,6 +94,11 @@ bool VerificarContrasenas(char Clave[10], int situacion[??])
         situacion[6]=1 -> Tiene 2 caracteres consecutivos alfabeticamente
 
     */
+    
+    for(int i=0; i<strlen(Clave); i++)
+    {
+    	Clave[i]=0;
+	}
 
     int contadorMayusculas = 0, contadorMinusculas = 0, contadorDigitos = 0, contadorTildes = 0;
 
