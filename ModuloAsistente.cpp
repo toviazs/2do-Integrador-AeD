@@ -35,6 +35,13 @@ struct fecha
     int anio;
 };
 
+struct turnos
+{
+    int matricula;
+    fecha fec;
+    int DNIdueño;
+    char atencion [380];
+};
 
 struct datosUsuario
 {
@@ -64,19 +71,59 @@ struct mascota
 };
 
 //P R O T O T I P O S
-void AgregarMascota(mascota vec[TAMANO], int &indice);
+void AgregarMascota(FILE *archi, int &indice);
 void ListarAnimales(mascota vec[TAMANO], int &indice);
+void RegistrarTurno(FILE *archi, int &indice);
 
 main()
 {
+    FILE *archivo;
+    FILE *archivo2;
     int opcion;
     int idx = 0;
+    int idxTurnos = 0;
     int caso = 0;
     setlocale(LC_ALL, "");
     fecha reg[TAMANO];
     datosUsuario reg2[TAMANO];
     datosVete reg3[TAMANO];
     mascota reg4[TAMANO];
+    
+    
+    if (archivo == NULL)
+    {
+        printf("El arcivo Mascotas.dat no existe. Se intentara crearlo.\n\n");
+        archivo = fopen("Mascotas.dat", "w+b");
+
+        if (archivo == NULL)
+        {
+            printf("Error. No se pudo crear");
+            exit(1);
+        }
+
+        printf("El archivo se creo exitosamente.\n");
+        system("pause");
+    }
+
+    
+    archivo2 = fopen("Turnos.dat", "r+b");
+
+    if (archivo == NULL)
+    {
+        printf("El arcivo Turnos.dat no existe. Se intentara crearlo.\n\n");
+        archivo = fopen("Turnos.dat", "w+b");
+
+        if (archivo == NULL)
+        {
+            printf("Error. No se pudo crear");
+            exit(1);
+        }
+
+        printf("El archivo se creo exitosamente.\n");
+        system("pause");
+    }
+
+
     do
     {
         
@@ -93,6 +140,8 @@ main()
         printf("> Selección: ");
         scanf("%d", &caso);
 
+        system("cls");
+
         switch (caso)
         {
         case 1:
@@ -101,8 +150,7 @@ main()
         }
         case 2:
         {
-            system("cls");
-            AgregarMascota(reg4, idx);
+            AgregarMascota(archivo, idx);
             printf("\n¿Desea ver el listado? (1- SI / 0- NO)");
             scanf("%d", &opcion);
 
@@ -120,7 +168,9 @@ main()
         }
         case 3:
         {
-
+            printf("Registrar Turnos");
+            RegistrarTurno(archivo2, idxTurnos);
+            break;
         }
         case 4:
         {
@@ -132,8 +182,10 @@ main()
 
 }
 
-void AgregarMascota(mascota vec[TAMANO], int &indice)
+void AgregarMascota(FILE *archi, int &indice)
 {
+    mascota vec[TAMANO];
+
     system("cls");
     printf("\tR E G I S T R A R  M A S C O T A");
     
@@ -173,6 +225,10 @@ void AgregarMascota(mascota vec[TAMANO], int &indice)
     gets(vec[indice].numeroTel);
     
     indice++;
+
+    fseek(archi, 0, SEEK_END);
+
+    fwrite(&vec, sizeof(vec), 1, archi);
 }
 
 void ListarAnimales(mascota vec[TAMANO], int &indice)
@@ -191,4 +247,30 @@ void ListarAnimales(mascota vec[TAMANO], int &indice)
         printf("\nNumero de teléfono: %s", vec[i].numeroTel);
         printf("\n\n========================================\n");
     }
+}
+
+void RegistrarTurno(FILE *archi, int &indice)
+{
+    turnos reg[TAMANO];
+
+    printf("\n\nMatricula del Veterinario: ");
+    scanf("%d", &reg[indice].matricula);
+
+    printf("\nFecha de Turno: \n");
+    printf("Dia: ");
+    scanf("%d", &reg[indice].fec.dia);
+    printf("\nMes: ");
+    scanf("%d", &reg[indice].fec.mes);
+    printf("\nAño: ");
+    scanf("%d", &reg[indice].fec.anio);
+
+    printf("\n\nDNI Dueño: ");
+    scanf("%d", &reg[indice].DNIdueño);
+
+    printf("\nDetalle de Atencion: ");
+    scanf("%s", reg[indice].atencion);
+
+    fseek(archi, 0, SEEK_END);
+
+    fwrite(&reg, sizeof(reg), 1, archi);
 }
