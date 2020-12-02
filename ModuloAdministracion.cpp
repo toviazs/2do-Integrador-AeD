@@ -30,14 +30,15 @@ main()
 
     do
     {
-        printf("Modulo Consultorio Veterinario\n");
-        printf("================================\n\n");
+        printf("Modulo del Asistente\n");
+        printf("======================\n\n");
 
-        printf("1.- Iniciar Sesión\n");
-        printf("2.- Visualizar Lista de Espera de Turnos (Informe)\n");
-        printf("3.- Registrar Evolución de la Mascota\n\n");
+        printf("1.- Registrar Veterinario\n");
+        printf("2.- Registrar Usuario Asistente\n");
+        printf("3.- Atenciones por Veterinarios\n");
+        printf("4.- Ranking de Veterinarios por Atenciones\n\n");
 
-        printf("4.- Cerrar la aplicacion\n\n");
+        printf("5.- Cerrar la aplicacion\n\n");
         
         printf("> Seleccion: ");
         scanf("%d", &caso);
@@ -56,7 +57,11 @@ main()
         {
 
         }
+        case 4:
+        {
+            
+        }
         }
 
-    } while (caso != 4);
+    } while (caso != 5);
 }
