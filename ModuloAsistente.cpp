@@ -194,6 +194,7 @@ main()
 
 void AgregarMascota(FILE *archi, int &indice)
 {
+    archi = fopen("Mascotas.dat", "r+b");
     mascota vec[TAMANO];
 
     system("cls");
@@ -239,10 +240,15 @@ void AgregarMascota(FILE *archi, int &indice)
     fseek(archi, 0, SEEK_END);
 
     fwrite(&vec, sizeof(vec), 1, archi);
+
+    fclose(archi);
 }
 
-void ListarAnimales(mascota vec[TAMANO], int &indice)
+void ListarAnimales(FILE *archi, int &indice)
 {
+    archi = fopen("Mascotas.dat", "r+b");
+    mascota vec[TAMANO];
+
     for (int i = 1; i <= indice; i++)
     {
         system("cls");
@@ -257,10 +263,13 @@ void ListarAnimales(mascota vec[TAMANO], int &indice)
         printf("\nNumero de teléfono: %s", vec[i].numeroTel);
         printf("\n\n========================================\n");
     }
+
+    fclose(archi);
 }
 
 void RegistrarTurno(FILE *archi, int &indice)
 {
+    archi = fopen("Turnos.dat", "r+b");
     turnos reg[TAMANO];
 
     printf("\n\nMatricula del Veterinario: ");
@@ -284,6 +293,8 @@ void RegistrarTurno(FILE *archi, int &indice)
     fseek(archi, 0, SEEK_END);
 
     fwrite(&reg, sizeof(reg), 1, archi);
+
+    fclose(archi);
 }
 
 void ListarTurno(FILE *archi, int &indice)
