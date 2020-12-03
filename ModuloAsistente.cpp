@@ -137,12 +137,11 @@ main()
         printf("M o d u l o  d e  A s i s t e n c i a\n");
         printf("===========================================\n\n");
 
-        printf("1.- I n i c i a r   S e s i o n\n");
-        printf("2.- R e g i s t r a r   M a s c o t a\n");
-        printf("3.- R e g i s t r a r   T u r n o\n");
-        printf("4.- L i s t a d o  d e   A t e n c i o n e s   p o r   V e t e r i n a r i o   y   F e c h a\n\n");
+        printf("1.- R e g i s t r a r   M a s c o t a\n");
+        printf("2.- R e g i s t r a r   T u r n o\n");
+        printf("3.- L i s t a d o  d e   A t e n c i o n e s   p o r   V e t e r i n a r i o   y   F e c h a\n\n");
 
-        printf("5.- C e r r a r   l a   a p l i c a c i o n\n\n");
+        printf("4.- C e r r a r   l a   a p l i c a c i o n\n\n");
         printf("===========================================\n\n");
         printf("> ");
         scanf("%d", &caso);
@@ -151,11 +150,8 @@ main()
 
         switch (caso)
         {
+            
         case 1:
-
-            break;
-
-        case 2:
 
             AgregarMascota(archivo);
             printf("\n¿Desea ver el listado? (1- SI / 0- NO)");
@@ -172,20 +168,20 @@ main()
 
             break;
 
-        case 3:
+        case 2:
 
             printf("Registrar Turnos");
             RegistrarTurno(archivo2);
             break;
 
-        case 4:
+        case 3:
 
             ListarTurno(archivo2);
 
             break;
         }
 
-    } while (caso != 5);
+    } while (caso != 4);
 }
 
 void AgregarMascota(FILE *archi)
