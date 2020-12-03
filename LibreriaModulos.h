@@ -5,14 +5,26 @@
 #include <stdio.h>
 #include <string.h>
 #include <conio.h>
+
 struct user
 {
     char usuario[10];
     char contrasena[10];
     char ApeNom[60];
+    int modulo;
 };
 
-bool VerificarUsuario(char Usuario[10], int situacion[4])
+struct veterinario
+{
+    char nomyApe[60];
+    int matricula; //4 digitos como maximo
+    int DNI;
+    char telefono[25];
+    int modulo; //1 Administrador  2 Veterinario  3 Asistente
+    char contrasenia[10];
+};
+
+bool VerificarUsuarioNuevo(char Usuario[10], int situacion[4])
 {
     /*  Situaciones posibles
 
@@ -25,7 +37,7 @@ bool VerificarUsuario(char Usuario[10], int situacion[4])
 
     for (int i = 0; i < strlen(Usuario); i++) //me aseguro que todo el vector tiene 0s
     {
-        Usuario[i] = 0
+        Usuario[i] = 0;
     }
 
     FILE *archi = fopen("Usuarios.dat", "rb");
@@ -81,7 +93,7 @@ bool VerificarUsuario(char Usuario[10], int situacion[4])
     }
 }
 
-bool VerificarContrasenas(char Clave[10], int situacion[??])
+bool VerificarContrasenaNueva(char Clave[10], int situacion[7])
 {
     /*  Situaciones posibles
 
@@ -94,11 +106,11 @@ bool VerificarContrasenas(char Clave[10], int situacion[??])
         situacion[6]=1 -> Tiene 2 caracteres consecutivos alfabeticamente
 
     */
-    
-    for(int i=0; i<strlen(Clave); i++)
+
+    for (int i = 0; i < strlen(Clave); i++)
     {
-    	Clave[i]=0;
-	}
+        Clave[i] = 0;
+    }
 
     int contadorMayusculas = 0, contadorMinusculas = 0, contadorDigitos = 0, contadorTildes = 0;
 
@@ -164,4 +176,64 @@ bool VerificarContrasenas(char Clave[10], int situacion[??])
             }
         }
     }
+}
+
+bool LoginAdminAsistente(char Usuario[10], char Clave[10], int modulo)
+{
+    FILE *archi = fopen("Usuarios.dat", "rb");
+
+    user datosUsuario;
+
+    fread(&datosUsuario, sizeof(user), 1, archi);
+
+    while (!feof(archi))
+    {
+        if (strcmp(Usuario, datosUsuario.usuario) == 0 and strcmp(Clave, datosUsuario.contrasena) == 0 and datosUsuario.modulo == modulo)
+        {
+            return true;
+        }
+        fread(&datosUsuario, sizeof(user), 1, archi);
+    }
+
+    return false;
+}
+
+bool LoginVeterinario(int matricula, char Clave[10])
+{
+    FILE *archi = fopen("Veterinarios.dat", "rb");
+
+    veterinario vet;
+
+    fread(&vet, sizeof(vet), 1, archi);
+
+    while (!feof(archi))
+    {
+        if (matricula == vet.matricula and strcmp(Clave, vet.contrasenia) == 0)
+        {
+            return true;
+        }
+        fread(&vet, sizeof(vet), 1, archi);
+    }
+
+    return false;
+}
+
+bool VerificarMatricula(int matricula)
+{
+    FILE *archi = fopen("Veterinarios.dat", "rb");
+
+    veterinario vet;
+
+    fread(&vet, sizeof(vet), 1, archi);
+
+    while (!feof(archi))
+    {
+        if (matricula == vet.matricula)
+        {
+            return false;
+        }
+        fread(&vet, sizeof(vet), 1, archi);
+    }
+
+    return true;
 }
