@@ -3,17 +3,16 @@
 #include <string.h>
 #include <conio.h>
 
-
 /*
 Universidad Tecnologica Nacional
 Facultad Regional Tucuman
 Ingenieria en Sistemas de Informacion
 
-Paz Posse Tobías	
+Paz Posse Tobias	
 43562927
 Tobias.PazPosse@alu.frt.utn.edu.ar
 
-Pérez Lucas Gustavo
+Perez Lucas Gustavo
 43564887
 lucas.perez@alu.frt.utn.edu.ar
 
@@ -48,6 +47,7 @@ struct datosUsuario
     char usuario[10];
     char contrasena[10];
     char ApeyNom[60];
+    int modulo;
 };
 
 struct datosVete
@@ -56,6 +56,8 @@ struct datosVete
     int matricula;
     int DNI;
     char telefono[25];
+    int modulo; //1- Administrador. 2- Veterinario. 3- Asistente
+    char contraseña[10];
 };
 
 struct mascota
@@ -77,8 +79,6 @@ void ListarTurno(FILE *archi);
 
 main()
 {
-
-
     FILE *archivo, *archivo2;
     int opcion, idx = 0, idxTurnos = 0, caso = 0;
 
