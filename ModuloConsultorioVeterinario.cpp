@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
-#include "LibreriaModulos.h"
 
 /*
 Universidad Tecnologica Nacional
@@ -92,7 +91,6 @@ main()
 
 void listaDeTurnos(FILE *archivo)
 {
-<<<<<<< HEAD
 	system ("cls");
 	turnos reg;
 	archivo = fopen("Turnos.dat", "rb");
@@ -105,7 +103,7 @@ void listaDeTurnos(FILE *archivo)
 	{
 		if(!feof(archivo))
 		{
-			printf ("\nLa matricula es:  %d",reg.matricula);
+			printf ("\nLa matricula es:  %d",reg.matriculaVet);
 			printf("\nFecha ");
 			printf("\nDia: %d",reg.fec.dia);
 			printf("\nMes: %d",reg.fec.mes);
@@ -116,34 +114,12 @@ void listaDeTurnos(FILE *archivo)
 		fread(&reg, sizeof(reg), 1, archivo);
 	}
 	fclose(archivo);
-=======
-    system("cls");
-    turnos reg;
-    archivo = fopen("Turnos.dat", "rb");
 
-    printf("================================\n\n");
 
-    fread(&reg, sizeof(reg), 1, archivo);
-    while (!feof(archivo))
-    {
-        if (!feof(archivo))
-        {
-            printf("\nLa matricula es:  %d", reg.matriculaVet);
-            printf("\nFecha ");
-            printf("\nDia: %d", reg.fec.dia);
-            printf("\nMes: %d", reg.fec.mes);
-            printf("\nAnio: %d", reg.fec.anio);
-            printf("\nDni del duenio: %d\n", reg.DNIduenio);
-        }
-        fread(&reg, sizeof(reg), 1, archivo);
-    }
-    fclose(archivo);
->>>>>>> d1d4191c0467bf2c276d407f0d8a2eec45367a37
 }
-
+ 
 void evolucionMascota(FILE *archivo)
 {
-<<<<<<< HEAD
 	system ("cls");
 	turnos reg;
 	int dni;
@@ -152,6 +128,7 @@ void evolucionMascota(FILE *archivo)
 	printf("================================\n\n");
 	archivo = fopen("Turnos.dat", "a+b");
 	
+	fread(&reg, sizeof(turnos), 1, archivo);
 	printf ("\nIngrese DNI del duenio: ");
 	scanf ("%d",&dni);
 	do
@@ -160,25 +137,12 @@ void evolucionMascota(FILE *archivo)
 		printf ("\nIngrese DNI del duenio: ");
 		scanf ("%d",&dni);
 	}
-	while (dni!=reg.DNIduenio)
+	while (dni!=reg.DNIduenio);
 	
 	printf ("\nIngrese registro de la mascota: ");
 	_flushall();
 	gets(reg.atencion);
 	
+	fwrite(&reg, sizeof(turnos), 1, archivo);	
 	fclose(archivo);
-}
-=======
-    system("cls");
-    turnos reg;
-
-    archivo = fopen("Turnos.dat", "a+b");
->>>>>>> d1d4191c0467bf2c276d407f0d8a2eec45367a37
-
-    printf("\nIngrese evolucion de la mascota con un maximo de 380 caracteres: ");
-    _flushall();
-    gets(reg.atencion);
-    fwrite(&reg, sizeof(reg), 1, archivo);
-
-    fclose(archivo);
 }
