@@ -22,6 +22,7 @@ Ricardo.Posse@alu.frt.utn.edu.ar
 */
 
 typedef char cadena[20];
+typedef char nombreArchi[20];
 
 struct datosVete
 {
@@ -42,14 +43,13 @@ struct datosUsu
 };
 
 // Prototipos
-void AbrirGenerarArchivo(FILE *archi, cadena NombreArchivo);
 void registrarVeterinario(FILE *arch1);
 void registrarUsuarioAsistente(FILE *arch1);
 
 main()
 {
 	FILE *arch1, *arch2;
-	cadena ArchivoUsuarios = "Usuarios.dat", ArchivoVeterinarios = "Veterinarios.dat";
+	nombreArchi ArchivoUsuarios = "Usuarios.dat", ArchivoVeterinarios = "Veterinarios.dat";
 
 	//Genera los archivos en caso de que no existan
 	AbrirGenerarArchivo(arch1, ArchivoVeterinarios);
@@ -88,16 +88,6 @@ main()
 		}
 
 	} while (caso != 5);
-}
-
-void AbrirGenerarArchivo(FILE *archi, cadena NombreArchivo)
-{
-	archi = fopen(NombreArchivo, "r+b");
-
-	if (archi == NULL)
-	{
-		archi = fopen(NombreArchivo, "w+b");
-	}
 }
 
 void registrarVeterinario(FILE *arch1)

@@ -237,3 +237,20 @@ bool VerificarMatricula(int matricula)
 
     return true;
 }
+
+void AbrirGenerarArchivo(FILE *archi, char NombreArchivo[20])
+{
+    archi = fopen(NombreArchivo, "r+b");
+
+    if (archi == NULL)
+    {
+        archi = fopen(NombreArchivo, "w+b");
+
+        if (archi == NULL)
+        {
+            printf("Error: el archivo %s no existe y no se pudo crear", NombreArchivo);
+            getch();
+            exit(1);
+        }
+    }
+}

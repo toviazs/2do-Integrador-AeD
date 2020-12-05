@@ -27,6 +27,7 @@ Ricardo.Posse@alu.frt.utn.edu.ar
 */
 
 const int TAMANO = 60;
+typedef char nombreArchi[20];
 
 struct fecha
 {
@@ -83,53 +84,11 @@ main()
     FILE *archivo, *archivo2, *archivo3;
     int opcion, idx = 0, idxTurnos = 0, caso = 0;
 
-    archivo = fopen("Mascotas.dat", "r+b");
+    nombreArchi archivoMascotas = "Mascotas.dat", archivoTurnos = "Turnos.dat", archivoVeterinarios = "Veterinarios.dat";
 
-    if (archivo == NULL)
-    {
-        printf("El archivo Mascotas.dat no existe. Se intentara crearlo...\n\n");
-        getch();
-        archivo = fopen("Mascotas.dat", "w+b");
-
-        if (archivo == NULL)
-        {
-            printf("Error. No se pudo crear");
-            exit(1);
-        }
-
-        printf("El archivo se creo exitosamente.\n");
-        getch();
-    }
-    else
-    {
-        printf("El archivo Mascotas.dat fue abierto correctamente...\n");
-        getch();
-    }
-
-    archivo2 = fopen("Turnos.dat", "r+b");
-
-    if (archivo2 == NULL)
-    {
-        printf("El archivo Turnos.dat no existe. Se intentara crearlo.\n\n");
-        archivo2 = fopen("Turnos.dat", "w+b");
-
-        if (archivo2 == NULL)
-        {
-            printf("Error. No se pudo crear");
-            exit(1);
-        }
-
-        printf("El archivo se creo exitosamente.\n");
-        getch();
-    }
-    else
-    {
-        printf("El archivo Turnos.dat fue abierto correctamente...\n");
-        getch();
-    }
-
-    fclose(archivo2);
-    fclose(archivo);
+    AbrirGenerarArchivo(archivo, archivoMascotas);
+    AbrirGenerarArchivo(archivo2, archivoTurnos);
+    AbrirGenerarArchivo(archivo3, archivoVeterinarios);
 
     do
     {
