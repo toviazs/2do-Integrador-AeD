@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
+#include "LibreriaModulos.h"
 
 /*
 Universidad Tecnologica Nacional
@@ -26,6 +27,7 @@ Ricardo.Posse@alu.frt.utn.edu.ar
 */
 
 const int TAMANO = 60;
+typedef char nombreArchi[20];
 
 struct fecha
 {
@@ -36,10 +38,10 @@ struct fecha
 
 struct turnos
 {
-    int matricula;
     fecha fec;
     int DNIduenio;
     char atencion[380];
+    int matriculaVet; //la matricula del veterinario que lo atiende
 };
 
 struct datosUsuario
@@ -52,12 +54,12 @@ struct datosUsuario
 
 struct datosVete
 {
-    char nomyApe[80];
+    char nomyApe[60];
     int matricula;
     int DNI;
     char telefono[25];
     int modulo; //1- Administrador. 2- Veterinario. 3- Asistente
-    char contraseña[10];
+    char contrasenia[10];
 };
 
 struct mascota
@@ -74,61 +76,19 @@ struct mascota
 //P R O T O T I P O S
 void AgregarMascota(FILE *archi);
 void ListarAnimales(FILE *archi);
-void RegistrarTurno(FILE *archi);
-void ListarTurno(FILE *archi);
+void RegistrarTurno(FILE *archi, FILE *archi2);
+void ListarTurno(FILE *archi, FILE *archi2);
 
 main()
 {
-    FILE *archivo, *archivo2;
+    FILE *archivo, *archivo2, *archivo3;
     int opcion, idx = 0, idxTurnos = 0, caso = 0;
 
-    archivo = fopen("Mascotas.dat", "r+b");
+    nombreArchi archivoMascotas = "Mascotas.dat", archivoTurnos = "Turnos.dat", archivoVeterinarios = "Veterinarios.dat";
 
-    if (archivo == NULL)
-    {
-        printf("El archivo Mascotas.dat no existe. Se intentara crearlo...\n\n");
-        getch();
-        archivo = fopen("Mascotas.dat", "w+b");
-
-        if (archivo == NULL)
-        {
-            printf("Error. No se pudo crear");
-            exit(1);
-        }
-
-        printf("El archivo se creo exitosamente.\n");
-        getch();
-    }
-    else
-    {
-        printf("El archivo Mascotas.dat fue abierto correctamente...\n");
-        getch();
-    }
-
-    archivo2 = fopen("Turnos.dat", "r+b");
-
-    if (archivo2 == NULL)
-    {
-        printf("El archivo Turnos.dat no existe. Se intentara crearlo.\n\n");
-        archivo2 = fopen("Turnos.dat", "w+b");
-
-        if (archivo2 == NULL)
-        {
-            printf("Error. No se pudo crear");
-            exit(1);
-        }
-
-        printf("El archivo se creo exitosamente.\n");
-        getch();
-    }
-    else
-    {
-        printf("El archivo Turnos.dat fue abierto correctamente...\n");
-        getch();
-    }
-
-    fclose(archivo2);
-    fclose(archivo);
+    AbrirGenerarArchivo(archivo, archivoMascotas);
+    AbrirGenerarArchivo(archivo2, archivoTurnos);
+    AbrirGenerarArchivo(archivo3, archivoVeterinarios);
 
     do
     {
@@ -150,11 +110,11 @@ main()
 
         switch (caso)
         {
-            
+
         case 1:
 
             AgregarMascota(archivo);
-            printf("\n¿Desea ver el listado? (1- SI / 0- NO)");
+            printf("\nDesea ver el listado? (1- SI / 0- NO)");
             scanf("%d", &opcion);
 
             if (opcion == 1)
@@ -169,14 +129,15 @@ main()
             break;
 
         case 2:
+            system("cls");
 
             printf("Registrar Turnos");
-            RegistrarTurno(archivo2);
+            RegistrarTurno(archivo2, archivo3);
             break;
 
         case 3:
 
-            ListarTurno(archivo2);
+            ListarTurno(archivo2, archivo3);
 
             break;
         }
@@ -242,7 +203,7 @@ void ListarAnimales(FILE *archi)
 
     fread(&vec, sizeof(vec), 1, archi);
 
-    while(!feof(archi))
+    while (!feof(archi))
     {
         system("cls");
         printf("\tL I S T A R  M A S C O T A S");
@@ -264,13 +225,28 @@ void ListarAnimales(FILE *archi)
     system("cls");
 }
 
-void RegistrarTurno(FILE *archi)
+void RegistrarTurno(FILE *archi, FILE *archi2)
 {
+    archi2 = fopen("Veterinarios.dat", "r+b");
     archi = fopen("Turnos.dat", "r+b");
     turnos reg;
+    datosVete regi;
+    bool matCorrecta;
 
-    printf("\n\nMatricula del Veterinario: ");
-    scanf("%d", &reg.matricula);
+    do
+    {
+        matCorrecta = true;
+        printf("\n\nMatricula del Veterinario: ");
+        scanf("%d", &reg.matriculaVet);
+
+        if (VerificarMatricula(reg.matriculaVet))
+        {
+            printf("Error: la matricula no corresponde a un veterinario registrado");
+            matCorrecta = false;
+            getch();
+        }
+
+    } while (!matCorrecta);
 
     printf("\nFecha de Turno: \n");
     printf("Dia: ");
@@ -295,33 +271,75 @@ void RegistrarTurno(FILE *archi)
     system("cls");
 }
 
-void ListarTurno(FILE *archi)
+void ListarTurno(FILE *archi, FILE *archi2)
 {
+    archi2 = fopen("Veterinarios.dat", "r+b");
     archi = fopen("Turnos.dat", "r+b");
     turnos reg;
+    datosVete regi;
+
+    int mat = 0;                //matricula
+    bool matEncontrada = false; //bandera
+    bool matValida = false;
 
     fread(&reg, sizeof(turnos), 1, archi);
 
-    system("cls");
-    printf("\tL I S T A D O S   D E   T U R N O S");
-    printf("\n=============================================\n");
-
-    while (!feof(archi))
+    do
     {
-        if (!feof(archi))
-        {
-            printf("\nFecha de Turno \n");
-            printf("=========================\n");
-            printf("Dia: %d", reg.fec.dia);
-            printf("\nMes: %d", reg.fec.mes);
-            printf("\nAnio: %d", reg.fec.anio);
-            printf("\nDNI: %d", reg.DNIduenio);
-            printf("\nDetalles: %s", reg.atencion);
-            printf("\n=========================\n");
+        matValida = true;
+        system("cls");
+        printf("\tL I S T A D O   D E   T U R N O S");
+        printf("\n=============================================\n");
 
-            fread(&reg, sizeof(turnos), 1, archi);
+        printf("Ingrese matricula de Veterinario: ");
+        scanf("%d", &mat);
+
+        if (VerificarMatricula(mat))
+        {
+            printf("Error: la matricula no corresponde a un veterinario registrado");
+            getch();
+            matValida = false;
+        }
+    } while (!matValida);
+
+    system("cls");
+
+    fread(&regi, sizeof(datosVete), 1, archi2);
+
+    while (!feof(archi2))
+    {
+        if (mat == regi.matricula)
+        {
+            matEncontrada = true;
+        }
+
+        fread(&regi, sizeof(datosVete), 1, archi2);
+    }
+
+    if (matEncontrada)
+    {
+        while (!feof(archi))
+        {
+            if (!feof(archi) and reg.matriculaVet == mat)
+            {
+                printf("\nFecha de Turno \n");
+                printf("=========================\n");
+                printf("Dia: %d", reg.fec.dia);
+                printf("\nMes: %d", reg.fec.mes);
+                printf("\nAnio: %d", reg.fec.anio);
+                printf("\nDNI: %d", reg.DNIduenio);
+                printf("\nDetalles: %s", reg.atencion);
+                printf("\n=========================\n");
+
+                fread(&reg, sizeof(turnos), 1, archi);
+            }
         }
     }
+    else
+    {
+        printf("No se encontraron turnos");
+    }
+
     getch();
 
     fclose(archi);
