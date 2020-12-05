@@ -110,9 +110,10 @@ void listaDeTurnos (FILE *archivo)
 	turnos reg;
 	archivo = fopen("Turnos.dat", "rb");
 	
+	printf("----Lista de turnos----\n");
 	printf("================================\n\n");
 	
-	fread(&reg, sizeof(reg), 1, archivo);
+	fread(&reg, sizeof(turnos), 1, archivo);
 	while (!feof(archivo))
 	{
 		if(!feof(archivo))
@@ -133,13 +134,25 @@ void evolucionMascota(FILE *archivo)
 {
 	system ("cls");
 	turnos reg;
+	int dni;
 	
+	printf("----Evolucion de la mascota----\n");
+	printf("================================\n\n");
 	archivo = fopen("Turnos.dat", "a+b");
 	
-	printf("\nIngrese evolucion de la mascota con un maximo de 380 caracteres: ");
+	printf ("\nIngrese DNI del duenio: ");
+	scanf ("%d",&dni);
+	do
+	{
+		printf ("\nEl DNI seleccionado no coincide con un usuario. Ingrese nuevamente");
+		printf ("\nIngrese DNI del duenio: ");
+		scanf ("%d",&dni);
+	}
+	while (dni!=reg.DNIduenio)
+	
+	printf ("\nIngrese registro de la mascota: ");
 	_flushall();
 	gets(reg.atencion);
-	fwrite(&reg, sizeof(reg), 1, archivo);
 	
 	fclose(archivo);
 }
