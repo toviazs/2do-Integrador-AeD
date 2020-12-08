@@ -22,19 +22,18 @@ Posse Ricardo
 Ricardo.Posse@alu.frt.utn.edu.ar
 */
 
-typedef char cadena[10];
-
 main()
 {
-    cadena Usuario, Clave;
+    char Usuario[10], Clave[10];
     int opcion, matricula;
     bool admin, veterinario, asistente;
 
     system("cls");
     printf("\t\tMenu Principal");
     printf("\n\t\t..............");
-    printf("\n\nBienvenido al sistema! para continuar, inicie sesion\ncompletando las casillas con sus datos, el programa\n");
-    printf("lo derivara al modulo que le corresponda");
+    printf("\n\n\tBienvenido al sistema! para continuar, inicie sesion");
+    printf("\n\tcompletando las casillas con sus datos, el programa\n");
+    printf("\tlo derivara al modulo que le corresponda");
 
     getch();
 
@@ -48,7 +47,7 @@ main()
         printf("\n2. Ingresar como Veterinario");
         printf("\n3. Ingresar como Asistente");
         printf("\n\n4. Salir del programa");
-        printf("\n> ");
+        printf("\n\n> ");
 
         scanf("%d", &opcion);
 
@@ -73,6 +72,8 @@ main()
             {
                 printf("Error: usuario o contrasena incorrectos");
             }
+
+            getch();
 
             break;
         case 2:

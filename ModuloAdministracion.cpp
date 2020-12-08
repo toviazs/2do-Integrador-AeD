@@ -38,13 +38,13 @@ struct datosUsu
 {
 	char usuario[10];
 	char contrasenia[10];
-	char nomyApe[60];
+	char ApeNom[60];
 	int modulo;
 };
 
 // Prototipos
-void registrarVeterinario(FILE *arch1);
-void registrarUsuarioAsistente(FILE *arch1);
+void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets);
+void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios);
 
 main()
 {
@@ -60,13 +60,14 @@ main()
 	do
 	{
 		system("cls");
-		printf("Modulo del Asistente\n");
+		printf("Modulo Administracion\n");
 		printf("======================\n\n");
 		printf("1. Registrar Veterinario\n");
 		printf("2. Registrar Usuario Asistente\n");
 		printf("3. Atenciones por Veterinarios\n");
 		printf("4. Ranking de Veterinarios por Atenciones\n\n");
-		printf("5. Cerrar la aplicacion\n\n");
+		printf("5. Registrar Administrador\n\n");
+		printf("6. Cerrar la aplicacion\n\n");
 		printf("> ");
 
 		scanf("%d", &caso);
@@ -75,22 +76,25 @@ main()
 		{
 		case 1:
 			system("cls");
-			registrarVeterinario(arch1);
+			RegistrarVeterinario(arch1, ArchivoVeterinarios);
 			break;
 		case 2:
 			system("cls");
-			registrarUsuarioAsistente(arch1);
+			RegistrarUsuario(arch2, 3, ArchivoUsuarios); //El argumento 3 indica que es un asistente
 			break;
 		case 3:
 			break;
 		case 4:
 			break;
+		case 5:
+			RegistrarUsuario(arch2, 1, ArchivoUsuarios); //El argumento 1 indica que es un administrador
+			break;
 		}
 
-	} while (caso != 5);
+	} while (caso != 6);
 }
 
-void registrarVeterinario(FILE *arch1)
+void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets)
 {
 	datosVete reg;
 	cadena auxApeNom;
@@ -191,7 +195,13 @@ void registrarVeterinario(FILE *arch1)
 
 	reg.modulo = 2;
 
+	arch1 = fopen(archiVets, "r+b");
+
+	fseek(arch1, 0, SEEK_END);
+
 	fwrite(&reg, sizeof(reg), 1, arch1);
+
+	fclose(arch1);
 
 	printf("\n----Veterinario agregado con exito----");
 
@@ -199,25 +209,37 @@ void registrarVeterinario(FILE *arch1)
 	system("pause");
 }
 
-void registrarUsuarioAsistente(FILE *arch1)
+void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
 {
 	datosUsu reg;
-	int situacionUsuario[4], situacionContrasena[7];
+	int situacionUsuario[5], situacionContrasena[8];
 	bool usuarioValido, contrasenaValida;
 	cadena auxApeNom;
+	char auxUsuario[20]; //auxiliar con elementos extra para registrar posibles usuarios que se excedan del limite
+	char auxClave[20];	 //auxiliar con elementos extra para registrar posibles claves que se excedan del limte
 
 	/*  Situaciones posibles
-
+		=======================================================
         situacion[0]=1 -> Nombre de usuario ya utilizado
         situacion[1]=1 -> El primer digito no está en minúscula
         situacion[2]=1 -> Tiene menos de 2 mayúsculas
         situacion[3]=1 -> Tiene más de 3 digitos
-
+		situacion[4]=1 -> Tiene más de 9 caracteres
+		=======================================================
     */
 
-	printf("\tR E G I S T R A R  A S I S T E N T E");
+	printf("\tRegistrar ");
 
-	printf("\n========================================\n");
+	if (tipoUsuario == 1)
+	{
+		printf("Administrador");
+	}
+	else
+	{
+		printf("Asistente");
+	}
+
+	printf("\n\t===============\n");
 
 	do
 	{
@@ -225,11 +247,11 @@ void registrarUsuarioAsistente(FILE *arch1)
 
 		printf("\nIngrese Usuario: ");
 		_flushall();
-		gets(reg.usuario);
+		gets(auxUsuario);
 
 		//Verifica si el usuario es valido y muestra el error especifico
 
-		if (!VerificarUsuarioNuevo(reg.usuario, situacionUsuario))
+		if (!VerificarUsuarioNuevo(auxUsuario, situacionUsuario))
 		{
 			printf("Error:");
 			if (situacionUsuario[0] == 1)
@@ -248,10 +270,16 @@ void registrarUsuarioAsistente(FILE *arch1)
 			{
 				printf("\tNo puede tener mas de 3 numeros\n");
 			}
+			if (situacionUsuario[4] == 1)
+			{
+				printf("\tEs demasiado largo (9 caracteres maximo)\n");
+			}
 		}
 		else
 		{
 			usuarioValido = true;
+			_flushall();
+			strcpy(reg.usuario, auxUsuario);
 		}
 
 	} while (!usuarioValido);
@@ -262,10 +290,10 @@ void registrarUsuarioAsistente(FILE *arch1)
 
 		printf("Ingrese Contrasena: ");
 		_flushall();
-		gets(reg.contrasenia);
+		gets(auxClave);
 
 		/*  Situaciones posibles
-
+		=================================================================
         situacion[0]=1 -> No tiene ninguna Mayuscula
         situacion[1]=1 -> No tiene ninguna Minuscula
         situacion[2]=1 -> No tiene ningun Digito
@@ -273,9 +301,11 @@ void registrarUsuarioAsistente(FILE *arch1)
         situacion[4]=1 -> Tiene menos de 6 caracteres
         situacion[5]=1 -> Tiene mas de 3 numeros consecutivos
         situacion[6]=1 -> Tiene 2 caracteres consecutivos alfabeticamente
+		situacion[7]=1 -> Tiene más de 9 caracteres
+		=================================================================
     	*/
 
-		if (!VerificarContrasenaNueva(reg.contrasenia, situacionContrasena))
+		if (!VerificarContrasenaNueva(auxClave, situacionContrasena))
 		{
 			printf("Error: ");
 			if (situacionContrasena[0] == 1)
@@ -306,28 +336,47 @@ void registrarUsuarioAsistente(FILE *arch1)
 			{
 				printf("\tNo puede tener 2 caracteres consecutivos alfabeticamente\n");
 			}
+			if (situacionContrasena[7] == 1)
+			{
+				printf("\tEs demasiado larga (9 caracteres maximo)\n");
+			}
 		}
 		else
 		{
 			contrasenaValida = true;
+			_flushall();
+			strcpy(reg.contrasenia, auxClave);
 		}
 
 	} while (!contrasenaValida);
 
 	printf("\nApellido: ");
 	_flushall();
-	gets(reg.nomyApe);
+	gets(reg.ApeNom);
 
-	printf("\nNombre");
+	printf("\nNombre: ");
 	_flushall();
 	gets(auxApeNom);
 
-	strcat(reg.nomyApe, ", ");
-	strcat(reg.nomyApe, auxApeNom);
+	strcat(reg.ApeNom, ", ");
+	strcat(reg.ApeNom, auxApeNom);
 
-	reg.modulo = 3; //le asigna el modulo de asistente
+	if (tipoUsuario == 1)
+	{
+		reg.modulo = 1;
+	}
+	else if (tipoUsuario == 3)
+	{
+		reg.modulo = 3;
+	}
 
-	fwrite(&reg, sizeof(reg), 1, arch1);
+	arch1 = fopen(archiUsuarios, "r+b");
+
+	fseek(arch1, 0, SEEK_END);
+
+	fwrite(&reg, sizeof(datosUsu), 1, arch1);
+
+	fclose(arch1);
 
 	printf("\n----Usuario agregado con exito----");
 	getch();

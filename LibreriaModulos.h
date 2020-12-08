@@ -9,7 +9,7 @@
 struct user
 {
     char usuario[10];
-    char contrasena[10];
+    char contrasenia[10];
     char ApeNom[60];
     int modulo;
 };
@@ -20,11 +20,11 @@ struct veterinario
     int matricula; //4 digitos como maximo
     int DNI;
     char telefono[25];
-    int modulo; //1 Administrador  2 Veterinario  3 Asistente
+    int modulo; //1 Administrador   2 Veterinario   3 Asistente
     char contrasenia[10];
 };
 
-bool VerificarUsuarioNuevo(char Usuario[10], int situacion[4])
+bool VerificarUsuarioNuevo(char Usuario[30], int situacion[5])
 {
     /*  Situaciones posibles
 
@@ -32,12 +32,13 @@ bool VerificarUsuarioNuevo(char Usuario[10], int situacion[4])
         situacion[1]=1 -> El primer digito no está en minúscula
         situacion[2]=1 -> Tiene menos de 2 mayúsculas
         situacion[3]=1 -> Tiene más de 3 digitos
+        situacion[4]=1 -> Tiene más de 9 caracteres
 
     */
 
-    for (int i = 0; i < strlen(Usuario); i++) //me aseguro que todo el vector tiene 0s
+    for (int i = 0; i < 5; i++) //me aseguro que todo el vector tiene 0s
     {
-        Usuario[i] = 0;
+        situacion[i] = 0;
     }
 
     FILE *archi = fopen("Usuarios.dat", "rb");
@@ -56,9 +57,12 @@ bool VerificarUsuarioNuevo(char Usuario[10], int situacion[4])
         fread(&usuarioRegistrado.usuario, sizeof(user), 1, archi);
     }
 
-    if (!islower(Usuario[0]))
+    if (isalpha(Usuario[0]))
     {
-        situacion[1] = 1;
+        if (!islower(Usuario[0]))
+        {
+            situacion[1] = 1;
+        }
     }
 
     for (int i = 0; i < strlen(Usuario); i++)
@@ -83,7 +87,12 @@ bool VerificarUsuarioNuevo(char Usuario[10], int situacion[4])
         situacion[3] = 1;
     }
 
-    if (situacion[0] == 1 or situacion[1] == 1 or situacion[2] == 1 or situacion[3] == 1)
+    if (strlen(Usuario) > 9)
+    {
+        situacion[4] = 1;
+    }
+
+    if (situacion[0] == 1 or situacion[1] == 1 or situacion[2] == 1 or situacion[3] == 1 or situacion[4] == 1)
     {
         return false;
     }
@@ -93,7 +102,7 @@ bool VerificarUsuarioNuevo(char Usuario[10], int situacion[4])
     }
 }
 
-bool VerificarContrasenaNueva(char Clave[10], int situacion[7])
+bool VerificarContrasenaNueva(char Clave[30], int situacion[8])
 {
     /*  Situaciones posibles
 
@@ -104,12 +113,13 @@ bool VerificarContrasenaNueva(char Clave[10], int situacion[7])
         situacion[4]=1 -> Tiene menos de 6 caracteres
         situacion[5]=1 -> Tiene mas de 3 numeros consecutivos
         situacion[6]=1 -> Tiene 2 caracteres consecutivos alfabeticamente
+        situacion[7]=1 -> Tiene más de 9 caracteres
 
     */
 
-    for (int i = 0; i < strlen(Clave); i++)
+    for (int i = 0; i < 8; i++)
     {
-        Clave[i] = 0;
+        situacion[i] = 0;
     }
 
     int contadorMayusculas = 0, contadorMinusculas = 0, contadorDigitos = 0, contadorTildes = 0;
@@ -128,7 +138,7 @@ bool VerificarContrasenaNueva(char Clave[10], int situacion[7])
         {
             contadorDigitos++;
         }
-        else if (Clave[i] == 'á' or Clave[i] == 'é' or Clave[i] == 'í' or Clave[i] == 'ó' or Clave[i] == 'ú' or Clave[i] == 'Á' or Clave[i] == 'É' or Clave[i] == 'Í' or Clave[i] == 'Ó' or Clave[i] == 'Ú')
+        else if (!isprint(Clave[i]))
         {
             contadorTildes++;
         }
@@ -138,15 +148,18 @@ bool VerificarContrasenaNueva(char Clave[10], int situacion[7])
     {
         situacion[0] = 1;
     }
-    else if (contadorMinusculas < 1)
+
+    if (contadorMinusculas < 1)
     {
         situacion[1] = 1;
     }
-    else if (contadorDigitos < 1)
+
+    if (contadorDigitos < 1)
     {
         situacion[2] = 1;
     }
-    else if (contadorTildes > 0)
+
+    if (contadorTildes > 0)
     {
         situacion[3] = 1;
     }
@@ -159,23 +172,51 @@ bool VerificarContrasenaNueva(char Clave[10], int situacion[7])
     {
         for (int i = 0; i < strlen(Clave) - 3; i++)
         {
-            if (Clave[i] == (Clave[i + 1] + 1) and Clave[i + 1] == (Clave[i + 2] + 1) and Clave[i + 2] == (Clave[i + 3] + 1) and Clave[i + 3] == (Clave[i + 4] + 1))
+            if (Clave[i] == (Clave[i + 1] - 1) and Clave[i + 1] == (Clave[i + 2] - 1) and Clave[i + 2] == (Clave[i + 3] - 1) and Clave[i + 3] == (Clave[i + 4] - 1))
             {
                 situacion[5] = 1;
             }
         }
     }
 
+    char ch1, ch2; //declaro los chars para no modificar la clave en si, y poder pasarlos a minuscula
+
     if (strlen(Clave) >= 2)
     {
         for (int i = 0; i < strlen(Clave) - 1; i++)
         {
-            if (strcmp(&Clave[i], &Clave[i + 1]) > 0)
+            if (isalpha(Clave[i]) and isalpha(Clave[i + 1]))
             {
-                situacion[6] = 1;
+                ch1 = Clave[i];
+                ch2 = Clave[i + 1];
+
+                strlwr(&ch1);
+                strlwr(&ch2);
+
+                if (ch1 == (ch2 - 1))
+                {
+                    situacion[6] = 1;
+                }
             }
         }
     }
+
+    if (strlen(Clave) > 9)
+    {
+        situacion[7] = 1;
+    }
+
+    bool error = false;
+
+    for (int i = 0; i < 8; i++) //recorro el vector de situacion para ver si hay algun error
+    {
+        if (situacion[i] == 1)
+        {
+            error = true;
+        }
+    }
+
+    return (error) ? false : true;
 }
 
 bool LoginAdminAsistente(char Usuario[10], char Clave[10], int modulo)
@@ -188,10 +229,11 @@ bool LoginAdminAsistente(char Usuario[10], char Clave[10], int modulo)
 
     while (!feof(archi))
     {
-        if (strcmp(Usuario, datosUsuario.usuario) == 0 and strcmp(Clave, datosUsuario.contrasena) == 0 and datosUsuario.modulo == modulo)
+        if ((strcmp(Usuario, datosUsuario.usuario) == 0) and (strcmp(Clave, datosUsuario.contrasenia) == 0) and (datosUsuario.modulo == modulo))
         {
             return true;
         }
+
         fread(&datosUsuario, sizeof(user), 1, archi);
     }
 
