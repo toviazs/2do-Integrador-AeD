@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
-#include "LibreriaModulos.h"
 
 /*
 Universidad Tecnologica Nacional
@@ -55,19 +54,29 @@ struct mascota
     char numeroTel[25];
 };
 
+struct datosVete
+{
+    char nomyApe[60];
+    int matricula;
+    int DNI;
+    char telefono[25];
+    int modulo; //1- Administrador. 2- Veterinario. 3- Asistente
+    char contrasenia[10];
+};
+
 //prototipos
 void listaDeTurnos(FILE *archivo);
-void evolucionMascota(FILE *archivo, FILE *archivo2)
+void evolucionMascota(FILE *archivo, FILE *archivo2);
 
 main()
 {
-	FILE *archivo;
-	FILE *archivo2;
+	FILE *archivo, *archivo2, *archivo3;
 	int caso = 0, opc = 0;
 
 	archivo = fopen("Mascotas.dat", "r+b");
 	archivo2 = fopen("Turnos.dat", "r+b");
-	
+	archivo3 = fopen("Veterinarios.dat", "r+b");
+
 	do
 	{
 		system("cls");
@@ -105,24 +114,27 @@ main()
 	fclose(archivo2);
 }
 
-void listaDeTurnos(FILE *archivo)
+void listaDeTurnos(FILE *archivo, FILE *archivo2)
 {
 	system("cls");
 	turnos reg;
+	datosVete regi;
 	archivo = fopen("Turnos.dat", "rb");
+	archivo2 = fopen("Veterinarios.dat", "rb");
 
 	printf("----Lista de Turnos----\n");
 	printf("================================\n\n");
 
 	fread(&reg, sizeof(turnos), 1, archivo);
+	fread(&regi, sizeof(datosVete), 1, archivo2);
 
 	if (reg.borrado == false)
 	{
 		while (!feof(archivo))
 		{
-			if (!feof(archivo))
+			if ((!feof(archivo)) && (reg.matriculaVet == regi.matricula))
 			{
-				printf("\nLa matricula es:  %d", reg.matriculaVet);
+				printf("\nApellido y Nombre del Veterinario: %s", regi.nomyApe);
 				printf("\nFecha ");
 				printf("\nDia: %d", reg.fec.dia);
 				printf("\nMes: %d", reg.fec.mes);
@@ -130,10 +142,12 @@ void listaDeTurnos(FILE *archivo)
 				printf("\nDni del duenio: %d\n", reg.DNIduenio);
 			}
 			fread(&reg, sizeof(reg), 1, archivo);
-		}
+			fread(&regi, sizeof(datosVete), 1, archivo2);  
+		}		
 	}
 
 	fclose(archivo);
+	fclose(archivo2);
 }
 
 void evolucionMascota(FILE *archivo, FILE *archivo2)
@@ -142,7 +156,8 @@ void evolucionMascota(FILE *archivo, FILE *archivo2)
 	turnos reg;
 	mascota regi;
 
-	char apeynom;
+	char apeynom[60];
+	int opc = 0;
 
 	printf("\t----Evolucion de la mascota----\n");
 	printf("\t================================\n\n");
