@@ -42,6 +42,7 @@ struct turnos
     int DNIduenio;
     char atencion[380];
     int matriculaVet; //la matricula del veterinario que lo atiende
+    bool borrado;
 };
 
 struct datosUsuario
@@ -258,10 +259,7 @@ void RegistrarTurno(FILE *archi, FILE *archi2)
 
     printf("\n\nDNI Duenio: ");
     scanf("%d", &reg.DNIduenio);
-
-    printf("\nDetalle de Atencion: ");
-    _flushall();
-    gets(reg.atencion);
+    reg.borrado = false;
 
     fseek(archi, 0, SEEK_END);
 
