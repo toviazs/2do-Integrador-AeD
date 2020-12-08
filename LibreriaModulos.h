@@ -260,8 +260,21 @@ bool LoginVeterinario(int matricula, char Clave[10])
     return false;
 }
 
-bool VerificarMatricula(int matricula)
+bool VerificarMatricula(int matricula, int situacion[2])
 {
+    /*
+    Situaciones Posibles
+    =================================================
+    situacion[0]=1 -> La matricula ya esta en uso
+    situacion[1]=1 -> La matricula no tiene 4 digitos
+    =================================================
+    */
+
+    for (int i = 0; i < 2; i++) //vaciar el vector por las dudas
+    {
+        situacion[i] = 0;
+    }
+
     FILE *archi = fopen("Veterinarios.dat", "rb");
 
     veterinario vet;
@@ -272,12 +285,24 @@ bool VerificarMatricula(int matricula)
     {
         if (matricula == vet.matricula)
         {
-            return false;
+            situacion[0] = 1;
         }
         fread(&vet, sizeof(vet), 1, archi);
     }
 
-    return true;
+    if (matricula > 9999 or matricula < 1000)
+    {
+        situacion[1] = 1;
+    }
+
+    if (situacion[0] == 1 or situacion[1] == 1)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 void AbrirGenerarArchivo(FILE *archi, char NombreArchivo[20])

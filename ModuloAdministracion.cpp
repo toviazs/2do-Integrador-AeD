@@ -45,6 +45,7 @@ struct datosUsu
 // Prototipos
 void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets);
 void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios);
+void InfoVetActual(datosVete infoVet, int datos);
 
 main()
 {
@@ -67,7 +68,7 @@ main()
 		printf("3. Atenciones por Veterinarios\n");
 		printf("4. Ranking de Veterinarios por Atenciones\n\n");
 		printf("5. Registrar Administrador\n\n");
-		printf("6. Cerrar la aplicacion\n\n");
+		printf("6. Cerrar sesion\n\n");
 		printf("> ");
 
 		scanf("%d", &caso);
@@ -94,45 +95,138 @@ main()
 	} while (caso != 6);
 }
 
+void InfoVetActual(datosVete infoVet, int datos)
+{
+	printf("\tRegistrar Veterinario");
+
+	printf("\n\t=====================\n");
+
+	if (datos >= 1)
+	{
+		printf("\n%25s - %s\n", "Nombre", infoVet.nomyApe);
+
+		if (datos >= 2)
+		{
+			printf("%25s - %d\n", "Matricula", infoVet.matricula);
+
+			if (datos >= 3)
+			{
+				printf("%25s - %s\n", "Clave", infoVet.contrasenia);
+
+				if (datos >= 4)
+				{
+					printf("%25s - %d\n", "DNI", infoVet.DNI);
+
+					if (datos >= 5)
+					{
+						printf("%25s - %s\n", "Telefono", infoVet.telefono);
+					}
+				}
+			}
+		}
+	}
+}
+
+void InfoUserActual(datosUsu infoUser, int datos, int modulo)
+{
+	printf("\tRegistrar ");
+	if (modulo == 1)
+	{
+		printf("Administrador");
+		printf("\n\t=======================\n");
+	}
+	else
+	{
+		printf("Asistente");
+		printf("\n\t===================\n");
+	}
+
+	if (datos >= 1)
+	{
+		printf("\n%25s - %s\n", "Usuario", infoUser.usuario);
+
+		if (datos >= 2)
+		{
+			printf("%25s - %s\n", "Clave", infoUser.contrasenia);
+
+			if (datos >= 3)
+			{
+				printf("%25s - %s\n", "Nombre", infoUser.ApeNom);
+			}
+		}
+	}
+}
+
 void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets)
 {
 	datosVete reg;
 	cadena auxApeNom;
-	bool contrasenaValida;
-	int situacionContrasena[7];
+	bool contrasenaValida, matriculaValida;
+	int situacionContrasena[7], datos = 0; //datos almacena cuantos campos del registro ya han sido guardados
+	int situacionMatricula[2];
 
-	printf("\tR E G I S T R A R  V E T E R I N A R I O");
+	InfoVetActual(reg, datos);
 
-	printf("\n========================================\n");
-
-	printf("\nIngrese Apellido: ");
+	printf("\nApellido: ");
 	_flushall();
 	gets(reg.nomyApe);
 
-	printf("\nIngrese Nombre: ");
+	printf("Nombre: ");
 	_flushall();
 	gets(auxApeNom);
 
 	strcat(reg.nomyApe, ", ");
 	strcat(reg.nomyApe, auxApeNom);
 
+	datos = 1;
+	system("cls");
+	InfoVetActual(reg, datos);
+
+	/*
+    Situaciones Posibles
+    =================================================
+    situacion[0]=1 -> La matricula ya esta en uso
+    situacion[1]=1 -> La matricula no tiene 4 digitos
+    =================================================
+    */
+
 	do
 	{
-		printf("\nIngrese numero de matricula: ");
+		matriculaValida = false;
+
+		printf("\nNro de matricula: ");
 		scanf("%d", &reg.matricula);
 
-		if (reg.matricula > 9999 or reg.matricula < 1000)
+		if (!VerificarMatricula(reg.matricula, situacionMatricula))
 		{
-			printf("Error: la matricula debe tener 4 digitos");
+			printf("Error:");
+
+			if (situacionMatricula[0] == 1)
+			{
+				printf("\tLa matricula ya esta en uso\n");
+			}
+			if (situacionMatricula[1] == 1)
+			{
+				printf("\tDebe tener 4 digitos\n");
+			}
+
 			getch();
 		}
-	} while (reg.matricula > 9999 or reg.matricula < 1000);
+		else
+		{
+			datos = 2;
+			matriculaValida = true;
+		}
+
+		system("cls");
+		InfoVetActual(reg, datos);
+	} while (!matriculaValida);
 
 	do
 	{
 		contrasenaValida = false;
 
-		printf("Ingrese Contrasena: ");
+		printf("\nContrasena: ");
 		_flushall();
 		gets(reg.contrasenia);
 
@@ -178,20 +272,34 @@ void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets)
 			{
 				printf("\tNo puede tener 2 caracteres consecutivos alfabeticamente\n");
 			}
+
+			getch();
 		}
 		else
 		{
 			contrasenaValida = true;
+			datos = 3;
 		}
+
+		system("cls");
+		InfoVetActual(reg, datos);
 
 	} while (!contrasenaValida);
 
-	printf("\nIngrese DNI: ");
+	printf("\nDNI: ");
 	scanf("%d", &reg.DNI);
 
-	printf("\nIngrese telefono: ");
+	datos = 4;
+	system("cls");
+	InfoVetActual(reg, datos);
+
+	printf("\nTelefono: ");
 	_flushall();
 	gets(reg.telefono);
+
+	datos = 5;
+	system("cls");
+	InfoVetActual(reg, datos);
 
 	reg.modulo = 2;
 
@@ -203,10 +311,8 @@ void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets)
 
 	fclose(arch1);
 
-	printf("\n----Veterinario agregado con exito----");
-
-	printf("\n\n");
-	system("pause");
+	printf("\n\t----Veterinario agregado con exito----");
+	getch();
 }
 
 void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
@@ -217,6 +323,7 @@ void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
 	cadena auxApeNom;
 	char auxUsuario[20]; //auxiliar con elementos extra para registrar posibles usuarios que se excedan del limite
 	char auxClave[20];	 //auxiliar con elementos extra para registrar posibles claves que se excedan del limte
+	int datos = 0;		 //para saber cuantos datos validos van siendo ingresados al registro
 
 	/*  Situaciones posibles
 		=======================================================
@@ -228,24 +335,14 @@ void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
 		=======================================================
     */
 
-	printf("\tRegistrar ");
-
-	if (tipoUsuario == 1)
-	{
-		printf("Administrador");
-	}
-	else
-	{
-		printf("Asistente");
-	}
-
-	printf("\n\t===============\n");
+	system("cls");
+	InfoUserActual(reg, datos, tipoUsuario);
 
 	do
 	{
 		usuarioValido = false;
 
-		printf("\nIngrese Usuario: ");
+		printf("\nUsuario: ");
 		_flushall();
 		gets(auxUsuario);
 
@@ -274,13 +371,19 @@ void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
 			{
 				printf("\tEs demasiado largo (9 caracteres maximo)\n");
 			}
+
+			getch();
 		}
 		else
 		{
 			usuarioValido = true;
 			_flushall();
 			strcpy(reg.usuario, auxUsuario);
+			datos = 1;
 		}
+
+		system("cls");
+		InfoUserActual(reg, datos, tipoUsuario);
 
 	} while (!usuarioValido);
 
@@ -288,7 +391,7 @@ void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
 	{
 		contrasenaValida = false;
 
-		printf("Ingrese Contrasena: ");
+		printf("\nContrasena: ");
 		_flushall();
 		gets(auxClave);
 
@@ -340,26 +443,35 @@ void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
 			{
 				printf("\tEs demasiado larga (9 caracteres maximo)\n");
 			}
+
+			getch();
 		}
 		else
 		{
 			contrasenaValida = true;
 			_flushall();
 			strcpy(reg.contrasenia, auxClave);
+			datos = 2;
 		}
 
+		system("cls");
+		InfoUserActual(reg, datos, tipoUsuario);
 	} while (!contrasenaValida);
 
 	printf("\nApellido: ");
 	_flushall();
 	gets(reg.ApeNom);
 
-	printf("\nNombre: ");
+	printf("Nombre: ");
 	_flushall();
 	gets(auxApeNom);
 
 	strcat(reg.ApeNom, ", ");
 	strcat(reg.ApeNom, auxApeNom);
+
+	datos = 3;
+	system("cls");
+	InfoUserActual(reg, datos, tipoUsuario);
 
 	if (tipoUsuario == 1)
 	{
@@ -378,6 +490,6 @@ void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
 
 	fclose(arch1);
 
-	printf("\n----Usuario agregado con exito----");
+	printf("\n\t----Usuario agregado con exito----");
 	getch();
 }
