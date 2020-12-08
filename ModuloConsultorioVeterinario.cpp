@@ -34,6 +34,7 @@ struct fecha
 	int mes;
 	int anio;
 };
+
 struct turnos
 {
 	fecha fec;
@@ -43,18 +44,30 @@ struct turnos
 	bool borrado;
 };
 
+struct mascota
+{
+    char nombre[60];
+    char direcc[60];
+    int DNI_DUENIO;
+    char localidad[60];
+    fecha Fecha;
+    float peso;
+    char numeroTel[25];
+};
+
 //prototipos
 void listaDeTurnos(FILE *archivo);
-void evolucionMascota(FILE *archivo);
+void evolucionMascota(FILE *archivo, FILE *archivo2)
 
 main()
 {
 	FILE *archivo;
+	FILE *archivo2;
 	int caso = 0, opc = 0;
-	nombreArchi archivoTurnos = "Turnos.dat";
 
-	AbrirGenerarArchivo(archivo, archivoTurnos);
-
+	archivo = fopen("Mascotas.dat", "r+b");
+	archivo2 = fopen("Turnos.dat", "r+b");
+	
 	do
 	{
 		system("cls");
@@ -80,7 +93,7 @@ main()
 		}
 		case 2:
 		{
-			evolucionMascota(archivo);
+			evolucionMascota(archivo, archivo2);
 			getch();
 			break;
 		}
@@ -89,6 +102,7 @@ main()
 	} while (caso != 3);
 
 	fclose(archivo);
+	fclose(archivo2);
 }
 
 void listaDeTurnos(FILE *archivo)
@@ -122,25 +136,32 @@ void listaDeTurnos(FILE *archivo)
 	fclose(archivo);
 }
 
-void evolucionMascota(FILE *archivo)
+void evolucionMascota(FILE *archivo, FILE *archivo2)
 {
 	system("cls");
 	turnos reg;
-	int dni;
+	mascota regi;
+
+	char apeynom;
 
 	printf("\t----Evolucion de la mascota----\n");
 	printf("\t================================\n\n");
 	archivo = fopen("Turnos.dat", "a+b");
+	archivo2 = fopen("Mascotas.dat", "rb");
 
+	fread(&regi, sizeof(mascota), 1, archivo2);
 	fread(&reg, sizeof(turnos), 1, archivo);
-	printf("\nIngrese DNI del duenio: ");
-	scanf("%d", &dni);
+
+	printf("\nIngrese Apellido y Nombre de la mascota: ");
+	_flushall();
+	gets(apeynom);
+
 	do
 	{
-		printf("\nEl DNI seleccionado no coincide con un usuario. Ingrese nuevamente");
-		printf("\nIngrese DNI del duenio: ");
-		scanf("%d", &dni);
-	} while (dni != reg.DNIduenio);
+		printf("\nEl apellido y nombre seleccionado no coincide con un usuario. Ingrese nuevamente");
+		printf("\nIngrese Apellido y Nombre de la mascota: ");
+		gets(apeynom);
+	} while (strcmp(apeynom, regi.nombre) != 0);
 
 	printf("\nDesea registrar un nuevo informe o dar de Alta (1- Dar de Alta) / 2 - (Registrar Nuevo Informe)): ");
 	scanf("%d", &opc);
@@ -163,5 +184,6 @@ void evolucionMascota(FILE *archivo)
 	}
 
 	fclose(archivo);
+	fclose(archivo2);
 }
 
