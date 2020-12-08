@@ -77,7 +77,7 @@ struct mascota
 //P R O T O T I P O S
 void AgregarMascota(FILE *archi);
 void ListarAnimales(FILE *archi);
-void RegistrarTurno(FILE *archi, FILE *archi2);
+void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3);
 void ListarTurno(FILE *archi, FILE *archi2);
 
 main()
@@ -99,10 +99,11 @@ main()
         printf("===========================================\n\n");
 
         printf("1.- R e g i s t r a r   M a s c o t a\n");
-        printf("2.- R e g i s t r a r   T u r n o\n");
-        printf("3.- L i s t a d o  d e   A t e n c i o n e s   p o r   V e t e r i n a r i o   y   F e c h a\n\n");
+        printf("2.- L i s t a r   A n i m a l e s\n");
+        printf("3.- R e g i s t r a r   T u r n o\n");
+        printf("4.- L i s t a d o  d e   A t e n c i o n e s   p o r   V e t e r i n a r i o   y   F e c h a\n\n");
 
-        printf("4.- C e r r a r   l a   a p l i c a c i o n\n\n");
+        printf("5.- C e r r a r   S e s i o n\n\n");
         printf("===========================================\n\n");
         printf("> ");
         scanf("%d", &caso);
@@ -113,37 +114,30 @@ main()
         {
 
         case 1:
-
             AgregarMascota(archivo);
-            printf("\nDesea ver el listado? (1- SI / 0- NO)");
-            scanf("%d", &opcion);
-
-            if (opcion == 1)
-            {
-                ListarAnimales(archivo);
-            }
-            if ((opcion < -1) || (opcion > 1))
-            {
-                printf("ERROR. INGRESE UNA OPCION VALIDA");
-            }
-
             break;
 
         case 2:
-            system("cls");
-
-            printf("Registrar Turnos");
-            RegistrarTurno(archivo2, archivo3);
+            printf("\tL I S T A R  M A S C O T A S");
+            printf("\n========================================\n");
+            ListarAnimales(archivo);
             break;
 
         case 3:
+
+            system("cls");
+            printf("\nRegistrar Turnos");
+            RegistrarTurno(archivo2, archivo3, archivo);
+            break;
+
+        case 4:
 
             ListarTurno(archivo2, archivo3);
 
             break;
         }
 
-    } while (caso != 4);
+    } while (caso != 5);
 }
 
 void AgregarMascota(FILE *archi)
@@ -156,7 +150,7 @@ void AgregarMascota(FILE *archi)
 
     printf("\n========================================\n");
 
-    printf("Ingrese el nombre de la mascota: ");
+    printf("\nIngrese el nombre de la mascota: ");
     _flushall();
     gets(vec.nombre);
 
@@ -164,7 +158,7 @@ void AgregarMascota(FILE *archi)
     _flushall();
     gets(vec.direcc);
 
-    printf("\nIngrese el DNI del dueño: ");
+    printf("\nIngrese el DNI del duenio: ");
     scanf("%d", &vec.DNI_DUENIO);
 
     printf("\nIngrese la localidad: ");
@@ -202,21 +196,24 @@ void ListarAnimales(FILE *archi)
     archi = fopen("Mascotas.dat", "r+b");
     mascota vec;
 
+    rewind(archi);
+
     fread(&vec, sizeof(vec), 1, archi);
 
     while (!feof(archi))
     {
-        system("cls");
-        printf("\tL I S T A R  M A S C O T A S");
-        printf("\n========================================\n");
-        printf("Nombre de la Mascota: %s\n", vec.nombre);
-        printf("Direccion: %s", vec.direcc);
-        printf("\nDNI del duenio: %d", vec.DNI_DUENIO);
-        printf("\nLocalidad: %s", vec.localidad);
-        printf("FECHA: \nDIA: %d\nMES: %d\nANIO: %d", vec.Fecha.dia, vec.Fecha.mes, vec.Fecha.anio);
-        printf("\nPeso de la Mascota: %.2f", vec.peso);
-        printf("\nNumero de telefono: %s", vec.numeroTel);
-        printf("\n\n========================================\n");
+        if (!feof(archi))
+        {
+
+            printf("Nombre de la Mascota: %s\n", vec.nombre);
+            printf("Direccion: %s", vec.direcc);
+            printf("\nDNI del duenio: %d", vec.DNI_DUENIO);
+            printf("\nLocalidad: %s\n", vec.localidad);
+            printf("FECHA: %d/%d/%d\n", vec.Fecha.dia, vec.Fecha.mes, vec.Fecha.anio);
+            printf("\nPeso de la Mascota: %.2f", vec.peso);
+            printf("\nNumero de telefono: %s", vec.numeroTel);
+            printf("\n\n========================================\n");
+        }
 
         fread(&vec, sizeof(vec), 1, archi);
     }
@@ -226,13 +223,20 @@ void ListarAnimales(FILE *archi)
     system("cls");
 }
 
-void RegistrarTurno(FILE *archi, FILE *archi2)
+void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3)
 {
-    archi2 = fopen("Veterinarios.dat", "r+b");
     archi = fopen("Turnos.dat", "r+b");
+    archi2 = fopen("Veterinarios.dat", "r+b");
+    archi3 = fopen("Mascotas.dat", "r+b");
+    
+    mascota vec;
     turnos reg;
     datosVete regi;
+
+    int dni = 0;
     bool matCorrecta;
+
+    fread(&vec, sizeof(mascota), 1, archi3);
 
     do
     {
@@ -258,14 +262,28 @@ void RegistrarTurno(FILE *archi, FILE *archi2)
     scanf("%d", &reg.fec.anio);
 
     printf("\n\nDNI Duenio: ");
-    scanf("%d", &reg.DNIduenio);
-    reg.borrado = false;
+    scanf("%d", &dni);
+
+    if (dni != vec.DNI_DUENIO)
+    {
+        do
+        {
+            printf("\nEl DNI no coincide con el duenio. Ingrese el DNI correspondiente");
+            printf("\nDNI Duenio: ");
+            scanf("%d", &dni);
+
+        } while (dni != vec.DNI_DUENIO);
+    }
 
     fseek(archi, 0, SEEK_END);
 
+    reg.borrado = false;
     fwrite(&reg, sizeof(reg), 1, archi);
-
+    
     fclose(archi);
+    fclose(archi2);
+    fclose(archi3);
+
     system("cls");
 }
 
@@ -326,11 +344,11 @@ void ListarTurno(FILE *archi, FILE *archi2)
                 printf("\nMes: %d", reg.fec.mes);
                 printf("\nAnio: %d", reg.fec.anio);
                 printf("\nDNI: %d", reg.DNIduenio);
-                printf("\nDetalles: %s", reg.atencion);
+                printf("\nDetalles: ");
+                puts(reg.atencion);
                 printf("\n=========================\n");
-
-                fread(&reg, sizeof(turnos), 1, archi);
             }
+            fread(&reg, sizeof(turnos), 1, archi);
         }
     }
     else
@@ -341,6 +359,7 @@ void ListarTurno(FILE *archi, FILE *archi2)
     getch();
 
     fclose(archi);
+    fclose(archi2);
 
     system("cls");
 }
