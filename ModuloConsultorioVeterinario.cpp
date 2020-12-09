@@ -66,6 +66,7 @@ struct datosVete
 
 //prototipos
 void evolucionMascota(FILE *archivo, FILE *archivo2);
+void listaDeTurnos(FILE *archivo2, FILE *archivo3);
 
 main()
 {
@@ -113,13 +114,81 @@ main()
 	fclose(archivo2);
 	fclose(archivo3);
 }
+void listaDeTurnos(FILE *arhicvo2,FILE *archivo3);
+{
+	int mat = 0;                //matricula
+    bool matEncontrada = false; //bandera
+    bool matValida = false;
 
+	archi2 = fopen("Turnos.dat", "r+b");
+	archi3 = fopen("Veterinarios.dat", "r+b");
+
+    turnos reg;
+    datosVete regi;
+
+
+	do
+    {
+        matValida = true;
+        system("cls");
+
+        printf("\t----LISTA DE ESPERA DE TURNOS ----\n");
+        printf("\n=============================================\n");
+
+        printf("Ingrese matricula de Veterinario: ");
+        scanf("%d", &mat);
+
+        if (VerificarMatricula(mat))
+        {
+            printf("Error: la matricula no corresponde a un veterinario registrado");
+            getch();
+            matValida = false;
+        }
+    } while (!matValida);
+
+	fread(&reg, sizeof(turnos), 1, archi2);
+    fread(&regi, sizeof(datosVete), 1, archi3);
+
+    while (!feof(archi3))
+    {
+        if (mat == regi.matricula)
+        {
+            matEncontrada = true;
+        }
+
+        fread(&regi, sizeof(datosVete), 1, archi2);
+    }
+
+    if (matEncontrada)
+    {
+        while (!feof(archi2))
+        {
+            if (!feof(archi2) and reg.matriculaVet == mat)
+            {
+                printf("\nFecha de Turno: \n");
+                printf("=========================\n");
+                printf("Dia: %d", reg.fec.dia);
+                printf("\nMes: %d", reg.fec.mes);
+                printf("\nAnio: %d", reg.fec.anio);
+ 
+                printf("\n=========================\n");
+            }
+            fread(&reg, sizeof(turnos), 1, archi2);
+        }
+    }
+    else
+    {
+        printf("No se encontraron turnos");
+    }
+
+	fclose(archivo2);
+	fclose(archivo3);
+
+	
+}
 void evolucionMascota(FILE *archivo, FILE *archivo2)
 {
 	system("cls");
-	turnos reg;
-	mascota regi;
-
 	char apeynom[60];
 	int opc = 0;
 
@@ -127,6 +196,9 @@ void evolucionMascota(FILE *archivo, FILE *archivo2)
 	printf("\t================================\n\n");
 	archivo = fopen("Mascotas.dat", "rb");
 	archivo2 = fopen("Turnos.dat", "r+b"); 
+
+	turnos reg;
+	mascota regi;
 
 	fread(&reg, sizeof(turnos), 1, archivo2);
 	fread(&regi, sizeof(mascota), 1, archivo);
