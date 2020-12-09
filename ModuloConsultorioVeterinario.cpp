@@ -114,7 +114,8 @@ main()
 	fclose(archivo2);
 	fclose(archivo3);
 }
-void listaDeTurnos(FILE *arhicvo2,FILE *archivo3);
+
+void listaDeTurnos(FILE *archi2,FILE *archi3)
 {
 	int mat = 0;                //matricula
     bool matEncontrada = false; //bandera
@@ -125,7 +126,6 @@ void listaDeTurnos(FILE *arhicvo2,FILE *archivo3);
 
     turnos reg;
     datosVete regi;
-
 
 	do
     {
@@ -163,7 +163,7 @@ void listaDeTurnos(FILE *arhicvo2,FILE *archivo3);
     {
         while (!feof(archi2))
         {
-            if (!feof(archi2) and reg.matriculaVet == mat)
+            if (!feof(archi2) and reg.matriculaVet == mat and !reg.borrado)
             {
                 printf("\nFecha de Turno: \n");
                 printf("=========================\n");
@@ -181,11 +181,12 @@ void listaDeTurnos(FILE *arhicvo2,FILE *archivo3);
         printf("No se encontraron turnos");
     }
 
-	fclose(archivo2);
-	fclose(archivo3);
+	fclose(archi2);
+	fclose(archi3);
 
 	
 }
+
 void evolucionMascota(FILE *archivo, FILE *archivo2)
 {
 	system("cls");
