@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
+#include "LibreriaModulos.h"
 
 /*
 Universidad Tecnologica Nacional
@@ -117,7 +118,7 @@ main()
 
 void listaDeTurnos(FILE *archi2,FILE *archi3)
 {
-	int mat = 0;                //matricula
+	int mat = 0, situacion[2];                //matricula
     bool matEncontrada = false; //bandera
     bool matValida = false;
 
@@ -138,7 +139,7 @@ void listaDeTurnos(FILE *archi2,FILE *archi3)
         printf("Ingrese matricula de Veterinario: ");
         scanf("%d", &mat);
 
-        if (VerificarMatricula(mat))
+        if (VerificarMatricula(mat, situacion))
         {
             printf("Error: la matricula no corresponde a un veterinario registrado");
             getch();
