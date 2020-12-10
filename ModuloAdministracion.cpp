@@ -24,6 +24,22 @@ Ricardo.Posse@alu.frt.utn.edu.ar
 typedef char cadena[20];
 typedef char nombreArchi[20];
 
+struct fec
+{
+	int dia;
+	int mes;
+	int anio;
+};
+
+struct turns
+{
+	fec fecha;
+	int dniDuenio;
+	char atencion[380];
+	int matriculaVet;
+	bool borrado;
+};
+
 struct datosVete
 {
 	char nomyApe[60];
@@ -46,15 +62,17 @@ struct datosUsu
 void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets);
 void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios);
 void InfoVetActual(datosVete infoVet, int datos);
+void BuscarTurnosAtendidos(FILE *arch1, FILE *arch2, nombreArchi archiVeterinario, nombreArchi archiTurno);
 
 main()
 {
-	FILE *arch1, *arch2;
-	nombreArchi ArchivoUsuarios = "Usuarios.dat", ArchivoVeterinarios = "Veterinarios.dat";
+	FILE *arch1, *arch2, *arch3;
+	nombreArchi ArchivoUsuarios = "Usuarios.dat", ArchivoVeterinarios = "Veterinarios.dat", ArchivoTurnos = "Turnos.dat";
 
 	//Genera los archivos en caso de que no existan
 	AbrirGenerarArchivo(arch1, ArchivoVeterinarios);
 	AbrirGenerarArchivo(arch2, ArchivoUsuarios);
+	AbrirGenerarArchivo(arch3, ArchivoTurnos);
 
 	int caso = 0;
 
@@ -65,9 +83,11 @@ main()
 		printf("======================\n\n");
 		printf("1. Registrar Veterinario\n");
 		printf("2. Registrar Usuario Asistente\n");
-		printf("3. Atenciones por Veterinarios\n");
-		printf("4. Ranking de Veterinarios por Atenciones\n\n");
-		printf("5. Registrar Administrador\n\n");
+		printf("3. Registrar Administrador\n");
+		printf("==========================\n");
+		printf("4. Ranking de Veterinarios por Atenciones\n");
+		printf("5. Atenciones por Veterinarios\n");
+		printf("==========================\n");
 		printf("6. Cerrar sesion\n\n");
 		printf("> ");
 
@@ -80,15 +100,15 @@ main()
 			RegistrarVeterinario(arch1, ArchivoVeterinarios);
 			break;
 		case 2:
-			system("cls");
 			RegistrarUsuario(arch2, 3, ArchivoUsuarios); //El argumento 3 indica que es un asistente
 			break;
 		case 3:
+			RegistrarUsuario(arch2, 1, ArchivoUsuarios); //El argumento 1 indica que es un administrador
 			break;
 		case 4:
+			BuscarTurnosAtendidos(arch1, arch3, ArchivoVeterinarios, ArchivoTurnos);
 			break;
 		case 5:
-			RegistrarUsuario(arch2, 1, ArchivoUsuarios); //El argumento 1 indica que es un administrador
 			break;
 		}
 
@@ -491,5 +511,93 @@ void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
 	fclose(arch1);
 
 	printf("\n\t----Usuario agregado con exito----");
+	getch();
+}
+
+void BuscarTurnosAtendidos(FILE *arch1, FILE *arch2, nombreArchi archiVeterinario, nombreArchi archiTurnos)
+{
+	bool matriculaExistente;
+	int matricula;
+	int situacionMatricula[2];
+
+	/*
+    Situaciones Posibles
+    =================================================
+    situacion[0]=1 -> La matricula existe
+    situacion[1]=1 -> La matricula no tiene 4 digitos
+    =================================================
+    */
+
+	do
+	{
+		matriculaExistente = false;
+
+		system("cls");
+		printf("\tAtenciones por Veterinario\n");
+		printf("\t==========================\n");
+
+		printf("\nMatricula: ");
+		scanf("%d", &matricula);
+
+		if (!VerificarMatricula(matricula, situacionMatricula))
+		{
+			printf("\nError: ");
+
+			if (situacionMatricula[0] != 1)
+			{
+				printf("\tMatricula no existente\n");
+			}
+			if (situacionMatricula[1] == 1)
+			{
+				printf("\tDebe tener 4 digitos\n");
+			}
+		}
+		else
+		{
+			matriculaExistente = true;
+		}
+
+	} while (!matriculaExistente);
+
+	arch1 = fopen(archiVeterinario, "r+b");
+
+	datosVete infoVet;
+
+	fread(&infoVet, sizeof(infoVet), 1, arch1);
+
+	printf("Veterinario:\n");
+	printf("\t%20s: %s\n", "Nombre", infoVet.nomyApe);
+	printf("\t%20s: %d\n", "DNI", infoVet.DNI);
+
+	fclose(arch1);
+
+	printf("\n\nTurnos atendidos:\n\n");
+
+	arch2 = fopen(archiTurnos, "r+b");
+
+	turns infoTurno;
+	int contadorTurnosAtendidos = 0;
+
+	fread(&infoTurno, sizeof(turns), 1, arch2);
+
+	while (!feof(arch2))
+	{
+		if (infoTurno.matriculaVet == matricula and infoTurno.borrado == true)
+		{
+			contadorTurnosAtendidos++;
+			printf("\n%d_", contadorTurnosAtendidos);
+			printf("\t%20s: %d/%d/%d\n", "Fecha", infoTurno.fecha.dia, infoTurno.fecha.mes, infoTurno.fecha.anio);
+			printf("\t%20s: %d\n", "Dni duenio", infoTurno.dniDuenio);
+			printf("\t%20s: %s\n", "Observaciones", infoTurno.atencion);
+		}
+
+		fread(&infoTurno, sizeof(turns), 1, arch2);
+	}
+
+	if (contadorTurnosAtendidos == 0)
+	{
+		printf("\nEste veterinario no tiene turnos atendidos");
+	}
+
 	getch();
 }
