@@ -65,12 +65,12 @@ main()
 
             if (LoginAdminAsistente(Usuario, Clave, 1)) //el parametro 1 es para especificar que es un administrador
             {
-                printf("Sesion iniciada correctamente...");
+                printf("\n\tSesion iniciada correctamente...");
                 admin = true;
             }
             else
             {
-                printf("Error: usuario o contrasena incorrectos");
+                printf("\n\tError: usuario o contrasena incorrectos");
             }
 
             getch();
@@ -91,8 +91,10 @@ main()
             }
             else
             {
-                printf("Error: matricula o contrasena incorrecta");
+                printf("\n\tError: matricula o contrasena incorrecta");
             }
+
+            getch();
 
             break;
         case 3:
@@ -113,6 +115,9 @@ main()
             {
                 printf("Error: usuario o contrasena incorrectos");
             }
+
+            getch();
+
             break;
         }
 
