@@ -233,7 +233,7 @@ void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3)
     turnos reg;
     datosVete regi;
 
-    int dni = 0;
+    int dni = 0, situacion[2];
     bool matCorrecta;
 
     fread(&vec, sizeof(mascota), 1, archi3);
@@ -244,7 +244,7 @@ void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3)
         printf("\n\nMatricula del Veterinario: ");
         scanf("%d", &reg.matriculaVet);
 
-        if (VerificarMatricula(reg.matriculaVet))
+        if (VerificarMatricula(reg.matriculaVet, situacion))
         {
             printf("Error: la matricula no corresponde a un veterinario registrado");
             matCorrecta = false;
@@ -272,12 +272,17 @@ void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3)
             printf("\nDNI Duenio: ");
             scanf("%d", &dni);
 
+
         } while (dni != vec.DNI_DUENIO);
     }
-
-    fseek(archi, 0, SEEK_END);
+    else
+    {
+        reg.DNIduenio = dni;
+    }
 
     reg.borrado = false;
+
+    fseek(archi, 0, SEEK_END);
     fwrite(&reg, sizeof(reg), 1, archi);
     
     fclose(archi);
@@ -294,7 +299,7 @@ void ListarTurno(FILE *archi, FILE *archi2)
     turnos reg;
     datosVete regi;
 
-    int mat = 0;                //matricula
+    int mat = 0, situ[2];                //matricula
     bool matEncontrada = false; //bandera
     bool matValida = false;
 
@@ -310,7 +315,7 @@ void ListarTurno(FILE *archi, FILE *archi2)
         printf("Ingrese matricula de Veterinario: ");
         scanf("%d", &mat);
 
-        if (VerificarMatricula(mat))
+        if (VerificarMatricula(mat, situ))
         {
             printf("Error: la matricula no corresponde a un veterinario registrado");
             getch();

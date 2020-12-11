@@ -90,7 +90,7 @@ main()
 
 		printf("3.- Cerrar sesion\n\n");
 
-		printf("> : ");
+		printf("> ");
 		scanf("%d", &caso);
 
 		switch (caso)
@@ -128,6 +128,8 @@ void listaDeTurnos(FILE *archi2,FILE *archi3)
     turnos reg;
     datosVete regi;
 
+	fread(&reg, sizeof(turnos), 1, archi2);
+
 	do
     {
         matValida = true;
@@ -147,7 +149,8 @@ void listaDeTurnos(FILE *archi2,FILE *archi3)
         }
     } while (!matValida);
 
-	fread(&reg, sizeof(turnos), 1, archi2);
+	system("cls");
+
     fread(&regi, sizeof(datosVete), 1, archi3);
 
     while (!feof(archi3))
@@ -157,7 +160,7 @@ void listaDeTurnos(FILE *archi2,FILE *archi3)
             matEncontrada = true;
         }
 
-        fread(&regi, sizeof(datosVete), 1, archi2);
+        fread(&regi, sizeof(datosVete), 1, archi3);
     }
 
     if (matEncontrada)
@@ -183,15 +186,13 @@ void listaDeTurnos(FILE *archi2,FILE *archi3)
     }
 
 	fclose(archi2);
-	fclose(archi3);
-
-	
+	fclose(archi3);	
 }
 
 void evolucionMascota(FILE *archivo, FILE *archivo2)
 {
 	system("cls");
-	char apeynom[60];
+	char apeynom[60], aux[380];
 	int opc = 0;
 
 	printf("\t----Evolucion de la mascota----\n");
@@ -226,6 +227,8 @@ void evolucionMascota(FILE *archivo, FILE *archivo2)
 
 	if (opc == 1)
 	{
+		fread(&reg, sizeof(turnos), 1, archivo2);
+		
 		reg.borrado = true;
 
 		fseek(archivo2, (long)-sizeof(turnos), SEEK_CUR);
@@ -236,7 +239,13 @@ void evolucionMascota(FILE *archivo, FILE *archivo2)
 	{
 		printf("\nIngrese registro de la mascota: ");
 		_flushall();
-		gets(reg.atencion);
+		gets(aux);
+
+		fread(&reg, sizeof(turnos), 1, archivo2);
+
+		strcpy(reg.atencion, aux);
+
+		fseek(archivo2, (long)-sizeof(turnos), SEEK_CUR);
 		fwrite(&reg, sizeof(turnos), 1, archivo2);
 	}
 
