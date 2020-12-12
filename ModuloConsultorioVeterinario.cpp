@@ -3,6 +3,7 @@
 #include <string.h>
 #include <conio.h>
 #include "LibreriaModulos.h"
+#include <windows.h>
 
 /*
 Universidad Tecnologica Nacional
@@ -27,43 +28,6 @@ Ricardo.Posse@alu.frt.utn.edu.ar
 */
 
 typedef char nombreArchi[20];
-
-struct fecha
-{
-	int dia;
-	int mes;
-	int anio;
-};
-
-struct turnos
-{
-	fecha fec;
-	int DNIduenio;
-	char atencion[380];
-	int matriculaVet;
-	bool borrado;
-};
-
-struct mascota
-{
-	char nombre[60];
-	char direcc[60];
-	int DNI_DUENIO;
-	char localidad[60];
-	fecha fec;
-	float peso;
-	char numeroTel[25];
-};
-
-struct veterinario
-{
-	char nomyApe[60];
-	int matricula;
-	int DNI;
-	char telefono[25];
-	int modulo; //1- Administrador. 2- Veterinario. 3- Asistente
-	char contrasenia[10];
-};
 
 //prototipos
 void evolucionMascota(FILE *archivo, FILE *archivo2);
@@ -114,6 +78,11 @@ main()
 			{
 				caso = 1;
 			}
+			else
+			{
+				system("MenuPrincipal.exe");
+			}
+
 			break;
 		}
 
@@ -279,7 +248,7 @@ void evolucionMascota(FILE *archivo, FILE *archivo2)
 
 		while (!feof(archivo2))
 		{
-			if (!reg.borrado)
+			if (!reg.borrado and strcmp(apeynom, regi.nombre) == 0)
 			{
 				regEncontrado = true;
 				break;

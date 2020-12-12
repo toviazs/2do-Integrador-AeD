@@ -3,6 +3,7 @@
 #include <string.h>
 #include <conio.h>
 #include "LibreriaModulos.h"
+#include <windows.h>
 
 /*
 Universidad Tecnologica Nacional
@@ -28,43 +29,6 @@ Ricardo.Posse@alu.frt.utn.edu.ar
 
 const int TAMANO = 60;
 typedef char nombreArchi[20];
-
-struct fecha
-{
-    int dia;
-    int mes;
-    int anio;
-};
-
-struct turnos
-{
-    fecha fec;
-    int DNIduenio;
-    char atencion[380];
-    int matriculaVet; //la matricula del veterinario que lo atiende
-    bool borrado;
-};
-
-struct veterinario
-{
-    char nomyApe[60];
-    int matricula;
-    int DNI;
-    char telefono[25];
-    int modulo; //1- Administrador. 2- Veterinario. 3- Asistente
-    char contrasenia[10];
-};
-
-struct mascota
-{
-    char nombre[60];
-    char direcc[60];
-    int DNI_DUENIO;
-    char localidad[60];
-    fecha fec;
-    float peso;
-    char numeroTel[25];
-};
 
 //P R O T O T I P O S
 void AgregarMascota(FILE *archi);
@@ -100,26 +64,28 @@ main()
         printf("> ");
         scanf("%d", &caso);
 
-        system("cls");
-
         switch (caso)
         {
 
         case 1:
+            system("cls");
             AgregarMascota(archivo);
             break;
 
         case 2:
+            system("cls");
             printf("\tListar Mascotas");
             printf("\n\t===============\n\n");
             ListarAnimales(archivo);
             break;
 
         case 3:
+            system("cls");
             RegistrarTurno(archivo2, archivo3, archivo);
             break;
 
         case 4:
+            system("cls");
             ListarTurno(archivo2, archivo3);
             break;
         case 5:
@@ -133,6 +99,11 @@ main()
             {
                 caso = 1;
             }
+            else
+            {
+                system("MenuPrincipal.exe");
+            }
+
             break;
         }
 
@@ -370,6 +341,8 @@ void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3)
     InfoTurnoActual(reg, datos);
 
     reg.borrado = false; //dado que el turno recien se crea, no puede haber sido atendido
+
+    strcpy(reg.atencion, "-Sin observacion-");
 
     fseek(archi, 0, SEEK_END);
     fwrite(&reg, sizeof(reg), 1, archi);

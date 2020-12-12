@@ -3,6 +3,7 @@
 #include <string.h>
 #include <conio.h>
 #include "LibreriaModulos.h"
+#include <windows.h>
 /*
 Universidad Tecnologica Nacional
 Facultad Regional Tucuman
@@ -24,53 +25,6 @@ Ricardo.Posse@alu.frt.utn.edu.ar
 typedef char cadena[20];
 typedef char nombreArchi[20];
 
-struct fecha
-{
-	int dia;
-	int mes;
-	int anio;
-};
-
-struct turnos
-{
-	fecha fec;
-	int DNIduenio;
-	char atencion[380];
-	int matriculaVet;
-	bool borrado;
-};
-
-struct veterinario
-{
-	char nomyApe[60];
-	int matricula; //4 digitos como maximo
-	int DNI;
-	char telefono[25];
-	int modulo; //1 Administrador  2 Veterinario  3 Asistente
-	char contrasenia[10];
-};
-
-struct user
-{
-	char usuario[10];
-	char contrasenia[10];
-	char ApeNom[60];
-	int modulo;
-};
-
-struct rank
-{
-	char ApeNomVet[60];
-	int turnosAtendidos;
-	int matricula;
-};
-
-struct nodo
-{
-	rank info;
-	nodo *sig;
-};
-
 // Prototipos
 void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets);
 void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios);
@@ -91,6 +45,7 @@ main()
 	int registrarVet;
 	int registrarAsistente;
 	int registrarAdmin;
+	int salirPrograma;
 
 	do
 	{
@@ -171,6 +126,23 @@ main()
 			break;
 		case 5:
 			BuscarTurnosAtendidos(arch1, arch3, ArchivoVeterinarios, ArchivoTurnos);
+			break;
+		case 6:
+			printf("\n\tSeguro que desea salir?");
+			printf("\n\n\t(1.Si  2.No)");
+			printf("\n\t> ");
+
+			scanf("%d", &salirPrograma);
+
+			if (salirPrograma != 1)
+			{
+				caso = 1;
+			}
+			else
+			{
+				system("MenuPrincipal.exe");
+			}
+
 			break;
 		}
 

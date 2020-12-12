@@ -4,6 +4,7 @@
 #include <conio.h>
 #include <iostream>
 #include "LibreriaModulos.h"
+#include <windows.h>
 /*
 Universidad Tecnologica Nacional
 Facultad Regional Tucuman
@@ -27,15 +28,6 @@ main()
     char Usuario[10], Clave[10];
     int opcion, matricula, salirPrograma;
     bool admin, veterinario, asistente;
-
-    system("cls");
-    printf("\t\tMenu Principal");
-    printf("\n\t\t..............");
-    printf("\n\n\tBienvenido al sistema! para continuar, inicie sesion");
-    printf("\n\tcompletando las casillas con sus datos, el programa\n");
-    printf("\tlo derivara al modulo que le corresponda");
-
-    getch();
 
     do
     {
@@ -78,6 +70,9 @@ main()
             {
                 printf("\n\tSesion iniciada correctamente...");
                 admin = true;
+
+                getch();
+                system("ModuloAdministracion.exe");
             }
             else
             {
@@ -107,8 +102,11 @@ main()
 
             if (LoginVeterinario(matricula, Clave))
             {
-                printf("Sesion iniciada correctamente...");
+                printf("\n\tSesion iniciada correctamente...");
                 veterinario = true;
+
+                getch();
+                system("ModuloConsultorioVeterinario.exe");
             }
             else
             {
@@ -139,8 +137,11 @@ main()
 
             if (LoginAdminAsistente(Usuario, Clave, 3)) //el parametro 3 es para especificar que es un asistente
             {
-                printf("Sesion iniciada correctamente...");
+                printf("\n\tSesion iniciada correctamente...");
                 asistente = true;
+
+                getch();
+                system("ModuloAsistente.exe");
             }
             else
             {
