@@ -50,12 +50,12 @@ struct mascota
 	char direcc[60];
 	int DNI_DUENIO;
 	char localidad[60];
-	fecha Fecha;
+	fecha fec;
 	float peso;
 	char numeroTel[25];
 };
 
-struct datosVete
+struct veterinario
 {
 	char nomyApe[60];
 	int matricula;
@@ -72,7 +72,7 @@ void listaDeTurnos(FILE *archivo2, FILE *archivo3);
 main()
 {
 	FILE *archivo, *archivo2, *archivo3;
-	int caso = 0, opc = 0;
+	int caso = 0, opc = 0, salirPrograma = 0;
 
 	archivo = fopen("Mascotas.dat", "r+b");
 	archivo2 = fopen("Turnos.dat", "r+b");
@@ -96,17 +96,25 @@ main()
 		switch (caso)
 		{
 		case 1:
-		{
 			listaDeTurnos(archivo2, archivo3);
 			getch();
 			break;
-		}
 		case 2:
-		{
 			evolucionMascota(archivo, archivo2);
 			getch();
 			break;
-		}
+		case 3:
+			printf("\n\tSeguro que desea salir?");
+			printf("\n\n\t(1.Si  2.No)");
+			printf("\n\t> ");
+
+			scanf("%d", &salirPrograma);
+
+			if (salirPrograma != 1)
+			{
+				caso = 1;
+			}
+			break;
 		}
 
 	} while (caso != 3);
@@ -119,7 +127,7 @@ main()
 void listaDeTurnos(FILE *archi, FILE *archi2)
 {
 	turnos reg;
-	datosVete regi;
+	veterinario regi;
 
 	int mat = 0; //matricula del veterinario
 	int situ[2], i = 1;
@@ -157,7 +165,7 @@ void listaDeTurnos(FILE *archi, FILE *archi2)
 
 		system("cls");
 
-		fread(&regi, sizeof(datosVete), 1, archi2);
+		fread(&regi, sizeof(veterinario), 1, archi2);
 
 		while (!feof(archi2))
 		{
@@ -167,7 +175,7 @@ void listaDeTurnos(FILE *archi, FILE *archi2)
 				break;
 			}
 
-			fread(&regi, sizeof(datosVete), 1, archi2);
+			fread(&regi, sizeof(veterinario), 1, archi2);
 		}
 
 		printf("Veterinario:\n");
@@ -205,23 +213,6 @@ void listaDeTurnos(FILE *archi, FILE *archi2)
 	}
 }
 
-void InfoEvolucionActual(turnos InfoTurno, mascota InfoMascota, int datos)
-{
-	printf("\tRegistrar Evolucion de Mascota");
-
-	printf("\n\t=================================\n");
-
-	if (datos >= 1)
-	{
-		printf("\n%25s - %s\n", "Nombre mascota", InfoMascota.nombre);
-
-		if (datos >= 2)
-		{
-			printf("%25s - %s\n", "Detalles", InfoTurno.atencion);
-		}
-	}
-}
-
 void evolucionMascota(FILE *archivo, FILE *archivo2)
 {
 	system("cls");
@@ -238,6 +229,8 @@ void evolucionMascota(FILE *archivo, FILE *archivo2)
 
 	turnos reg;
 	mascota regi;
+
+	printf("\n(Ingrese un 0 para salir)");
 
 	do
 	{
@@ -300,12 +293,12 @@ void evolucionMascota(FILE *archivo, FILE *archivo2)
 			if (opc == 1)
 			{
 				reg.borrado = true;
-		
+
 				fseek(archivo2, (long)-sizeof(turnos), SEEK_CUR);
 				fwrite(&reg, sizeof(turnos), 1, archivo2);
 
 				printf("\n\t----Mascota dada de alta con exito----");
-				
+
 				break;
 			}
 

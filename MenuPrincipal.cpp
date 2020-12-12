@@ -25,7 +25,7 @@ Ricardo.Posse@alu.frt.utn.edu.ar
 main()
 {
     char Usuario[10], Clave[10];
-    int opcion, matricula;
+    int opcion, matricula, salirPrograma;
     bool admin, veterinario, asistente;
 
     system("cls");
@@ -56,9 +56,20 @@ main()
         switch (opcion)
         {
         case 1:
+            printf("\tLogin Administrador\n");
+            printf("\t===================\n");
+
+            printf("\n\t(Ingrese un 0 para salir)");
+
             printf("\n\n\tUsuario\n\t> ");
             _flushall();
             gets(Usuario);
+
+            if (strcmp(Usuario, "0") == 0)
+            {
+                break;
+            }
+
             printf("\n\n\tClave\n\t> ");
             _flushall();
             gets(Clave);
@@ -77,8 +88,18 @@ main()
 
             break;
         case 2:
+            printf("\tLogin Veterinario\n");
+            printf("\t=================\n");
+
+            printf("\n\t(Ingrese un 0 para salir)");
+
             printf("\n\n\tMatricula\n\t> ");
             scanf("%d", &matricula);
+
+            if (matricula == 0)
+            {
+                break;
+            }
 
             printf("\n\n\tClave\n\t> ");
             _flushall();
@@ -98,9 +119,19 @@ main()
 
             break;
         case 3:
+            printf("\tLogin Asistente\n");
+            printf("\t===============\n");
+
+            printf("\n\t(Ingrese un 0 para salir)");
+
             printf("\n\n\tUsuario\n\t> ");
             _flushall();
             gets(Usuario);
+
+            if (strcmp(Usuario, "0") == 0)
+            {
+                break;
+            }
 
             printf("\n\n\tClave\n\t> ");
             _flushall();
@@ -119,7 +150,19 @@ main()
             getch();
 
             break;
+        case 4:
+            printf("\n\tSeguro que desea salir?");
+            printf("\n\n\t(1.Si  2.No)");
+            printf("\n\t> ");
+
+            scanf("%d", &salirPrograma);
+
+            if (salirPrograma != 1)
+            {
+                opcion = 1;
+            }
+            break;
         }
 
-    } while (true);
+    } while (opcion != 4);
 }

@@ -24,23 +24,23 @@ Ricardo.Posse@alu.frt.utn.edu.ar
 typedef char cadena[20];
 typedef char nombreArchi[20];
 
-struct fec
+struct fecha
 {
 	int dia;
 	int mes;
 	int anio;
 };
 
-struct turns
+struct turnos
 {
-	fec fecha;
-	int dniDuenio;
+	fecha fec;
+	int DNIduenio;
 	char atencion[380];
 	int matriculaVet;
 	bool borrado;
 };
 
-struct datosVete
+struct veterinario
 {
 	char nomyApe[60];
 	int matricula; //4 digitos como maximo
@@ -50,7 +50,7 @@ struct datosVete
 	char contrasenia[10];
 };
 
-struct datosUsu
+struct user
 {
 	char usuario[10];
 	char contrasenia[10];
@@ -74,11 +74,8 @@ struct nodo
 // Prototipos
 void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets);
 void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios);
-void InfoVetActual(datosVete infoVet, int datos);
 void BuscarTurnosAtendidos(FILE *arch1, FILE *arch2, nombreArchi archiVeterinario, nombreArchi archiTurno);
-void InsertarNodo(nodo *&puntero, rank valor);
 void RankingVeterinarios(FILE *arch1, FILE *arch2, nombreArchi archiVeterinarios, nombreArchi archiTurnos);
-void RecorrerLista(nodo *puntero);
 
 main()
 {
@@ -180,71 +177,9 @@ main()
 	} while (caso != 6);
 }
 
-void InfoVetActual(datosVete infoVet, int datos)
-{
-	printf("\tRegistrar Veterinario");
-
-	printf("\n\t=====================\n");
-
-	if (datos >= 1)
-	{
-		printf("\n%25s - %s\n", "Nombre", infoVet.nomyApe);
-
-		if (datos >= 2)
-		{
-			printf("%25s - %d\n", "Matricula", infoVet.matricula);
-
-			if (datos >= 3)
-			{
-				printf("%25s - %s\n", "Clave", infoVet.contrasenia);
-
-				if (datos >= 4)
-				{
-					printf("%25s - %d\n", "DNI", infoVet.DNI);
-
-					if (datos >= 5)
-					{
-						printf("%25s - %s\n", "Telefono", infoVet.telefono);
-					}
-				}
-			}
-		}
-	}
-}
-
-void InfoUserActual(datosUsu infoUser, int datos, int modulo)
-{
-	printf("\tRegistrar ");
-	if (modulo == 1)
-	{
-		printf("Administrador");
-		printf("\n\t=======================\n");
-	}
-	else
-	{
-		printf("Asistente");
-		printf("\n\t===================\n");
-	}
-
-	if (datos >= 1)
-	{
-		printf("\n%25s - %s\n", "Usuario", infoUser.usuario);
-
-		if (datos >= 2)
-		{
-			printf("%25s - %s\n", "Clave", infoUser.contrasenia);
-
-			if (datos >= 3)
-			{
-				printf("%25s - %s\n", "Nombre", infoUser.ApeNom);
-			}
-		}
-	}
-}
-
 void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets)
 {
-	datosVete reg;
+	veterinario reg;
 	cadena auxApeNom;
 	bool contrasenaValida, matriculaValida;
 	int situacionContrasena[7], datos = 0; //datos almacena cuantos campos del registro ya han sido guardados
@@ -402,7 +337,7 @@ void RegistrarVeterinario(FILE *arch1, nombreArchi archiVets)
 
 void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
 {
-	datosUsu reg;
+	user reg;
 	int situacionUsuario[5], situacionContrasena[8];
 	bool usuarioValido, contrasenaValida;
 	cadena auxApeNom;
@@ -571,7 +506,7 @@ void RegistrarUsuario(FILE *arch1, int tipoUsuario, nombreArchi archiUsuarios)
 
 	fseek(arch1, 0, SEEK_END);
 
-	fwrite(&reg, sizeof(datosUsu), 1, arch1);
+	fwrite(&reg, sizeof(user), 1, arch1);
 
 	fclose(arch1);
 
@@ -631,7 +566,7 @@ void BuscarTurnosAtendidos(FILE *arch1, FILE *arch2, nombreArchi archiVeterinari
 	{
 		arch1 = fopen(archiVeterinario, "r+b");
 
-		datosVete infoVet;
+		veterinario infoVet;
 
 		fread(&infoVet, sizeof(infoVet), 1, arch1);
 
@@ -655,10 +590,10 @@ void BuscarTurnosAtendidos(FILE *arch1, FILE *arch2, nombreArchi archiVeterinari
 
 		arch2 = fopen(archiTurnos, "r+b");
 
-		turns infoTurno;
+		turnos infoTurno;
 		int contadorTurnosAtendidos = 0;
 
-		fread(&infoTurno, sizeof(turns), 1, arch2);
+		fread(&infoTurno, sizeof(turnos), 1, arch2);
 
 		while (!feof(arch2))
 		{
@@ -666,12 +601,12 @@ void BuscarTurnosAtendidos(FILE *arch1, FILE *arch2, nombreArchi archiVeterinari
 			{
 				contadorTurnosAtendidos++;
 				printf("\n%d_", contadorTurnosAtendidos);
-				printf("\t%20s: %d/%d/%d\n", "Fecha", infoTurno.fecha.dia, infoTurno.fecha.mes, infoTurno.fecha.anio);
-				printf("\t%20s: %d\n", "Dni duenio", infoTurno.dniDuenio);
+				printf("\t%20s: %d/%d/%d\n", "Fecha", infoTurno.fec.dia, infoTurno.fec.mes, infoTurno.fec.anio);
+				printf("\t%20s: %d\n", "Dni duenio", infoTurno.DNIduenio);
 				printf("\t%20s: %s\n", "Observaciones", infoTurno.atencion);
 			}
 
-			fread(&infoTurno, sizeof(turns), 1, arch2);
+			fread(&infoTurno, sizeof(turnos), 1, arch2);
 		}
 
 		if (contadorTurnosAtendidos == 0)
@@ -687,8 +622,8 @@ void BuscarTurnosAtendidos(FILE *arch1, FILE *arch2, nombreArchi archiVeterinari
 
 void RankingVeterinarios(FILE *arch1, FILE *arch2, nombreArchi archiVeterinarios, nombreArchi archiTurnos)
 {
-	datosVete infoVet;
-	turns infoTurno;
+	veterinario infoVet;
+	turnos infoTurno;
 	int atendidos; //contador de turnos atendidos por x veterinario
 	rank rankingVet;
 
@@ -700,11 +635,11 @@ void RankingVeterinarios(FILE *arch1, FILE *arch2, nombreArchi archiVeterinarios
 
 	lista = NULL;
 
-	fread(&infoVet, sizeof(datosVete), 1, arch1);
+	fread(&infoVet, sizeof(veterinario), 1, arch1);
 
 	while (!feof(arch1))
 	{
-		fread(&infoTurno, sizeof(turns), 1, arch2);
+		fread(&infoTurno, sizeof(turnos), 1, arch2);
 		atendidos = 0;
 
 		while (!feof(arch2))
@@ -714,7 +649,7 @@ void RankingVeterinarios(FILE *arch1, FILE *arch2, nombreArchi archiVeterinarios
 				atendidos++;
 			}
 
-			fread(&infoTurno, sizeof(turns), 1, arch2);
+			fread(&infoTurno, sizeof(turnos), 1, arch2);
 		}
 
 		rankingVet.matricula = infoVet.matricula;
@@ -723,7 +658,7 @@ void RankingVeterinarios(FILE *arch1, FILE *arch2, nombreArchi archiVeterinarios
 
 		InsertarNodo(lista, rankingVet);
 
-		fread(&infoVet, sizeof(datosVete), 1, arch1);
+		fread(&infoVet, sizeof(veterinario), 1, arch1);
 	}
 
 	fclose(arch1);
@@ -742,46 +677,4 @@ void RankingVeterinarios(FILE *arch1, FILE *arch2, nombreArchi archiVeterinarios
 	RecorrerLista(lista);
 
 	getch();
-}
-
-void InsertarNodo(nodo *&puntero, rank valor)
-{
-	nodo *nuevo = new nodo();
-	nuevo->info = valor;
-
-	nodo *aux1 = puntero;
-	nodo *aux2;
-
-	while ((aux1 != NULL) and (aux1->info.turnosAtendidos > valor.turnosAtendidos))
-	{
-		aux2 = aux1;
-		aux1 = aux1->sig;
-	}
-
-	if (puntero == aux1)
-	{
-		puntero = nuevo;
-	}
-	else
-	{
-		aux2->sig = nuevo;
-	}
-
-	nuevo->sig = aux1;
-}
-
-void RecorrerLista(nodo *puntero)
-{
-	nodo *p = puntero;
-
-	int posicion = 1;
-
-	while (p != NULL)
-	{
-		printf("\n#%d _ \tVeterinario: %s", posicion, p->info.ApeNomVet);
-		printf("\n\tMatricula: %d", p->info.matricula);
-		printf("\n\tTurnos atendidos: %d\n", p->info.turnosAtendidos);
-		p = p->sig;
-		posicion++;
-	}
 }

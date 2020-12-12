@@ -45,15 +45,7 @@ struct turnos
     bool borrado;
 };
 
-struct datosUsuario
-{
-    char usuario[10];
-    char contrasena[10];
-    char ApeyNom[60];
-    int modulo;
-};
-
-struct datosVete
+struct veterinario
 {
     char nomyApe[60];
     int matricula;
@@ -69,7 +61,7 @@ struct mascota
     char direcc[60];
     int DNI_DUENIO;
     char localidad[60];
-    fecha Fecha;
+    fecha fec;
     float peso;
     char numeroTel[25];
 };
@@ -83,7 +75,7 @@ void ListarTurno(FILE *archi, FILE *archi2);
 main()
 {
     FILE *archivo, *archivo2, *archivo3;
-    int opcion, idx = 0, idxTurnos = 0, caso = 0;
+    int opcion, idx = 0, idxTurnos = 0, caso = 0, salirPrograma;
 
     nombreArchi archivoMascotas = "Mascotas.dat", archivoTurnos = "Turnos.dat", archivoVeterinarios = "Veterinarios.dat";
 
@@ -128,77 +120,23 @@ main()
             break;
 
         case 4:
-
             ListarTurno(archivo2, archivo3);
+            break;
+        case 5:
+            printf("\n\tSeguro que desea salir?");
+            printf("\n\n\t(1.Si  2.No)");
+            printf("\n\t> ");
 
+            scanf("%d", &salirPrograma);
+
+            if (salirPrograma != 1)
+            {
+                caso = 1;
+            }
             break;
         }
 
     } while (caso != 5);
-}
-
-void InfoMascotaActual(mascota InfoMasc, int datos)
-{
-    printf("\tRegistrar Mascota");
-
-    printf("\n\t=================\n");
-
-    if (datos >= 1)
-    {
-        printf("\n%25s - %s\n", "Nombre mascota", InfoMasc.nombre);
-
-        if (datos >= 2)
-        {
-            printf("%25s - %s\n", "Direccion", InfoMasc.direcc);
-
-            if (datos >= 3)
-            {
-                printf("%25s - %d\n", "Dni duenio", InfoMasc.DNI_DUENIO);
-
-                if (datos >= 4)
-                {
-                    printf("%25s - %s\n", "Localidad", InfoMasc.localidad);
-
-                    if (datos >= 5)
-                    {
-                        printf("%25s - %d/%d/%d\n", "Fecha", InfoMasc.Fecha.dia, InfoMasc.Fecha.mes, InfoMasc.Fecha.anio);
-
-                        if (datos >= 6)
-                        {
-                            printf("%25s - %.2f kg\n", "Peso", InfoMasc.peso);
-
-                            if (datos >= 7)
-                            {
-                                printf("%25s - %s\n", "Telefono", InfoMasc.numeroTel);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-void InfoTurnoActual(turnos InfoTurno, int datos)
-{
-    printf("\t\tRegistrar Turno");
-
-    printf("\n\t\t=================\n");
-
-    if (datos >= 1)
-    {
-        printf("\n%25s - %d\n", "Matricula veterinario", InfoTurno.matriculaVet);
-
-        if (datos >= 2)
-        {
-            printf("%25s - %d/%d/%d\n", "Fecha", InfoTurno.fec.dia, InfoTurno.fec.mes, InfoTurno.fec.anio);
-
-            if (datos >= 3)
-            {
-                printf("%25s - %d\n", "Dni duenio", InfoTurno.DNIduenio);
-            }
-        }
-    }
 }
 
 void AgregarMascota(FILE *archi)
@@ -213,9 +151,16 @@ void AgregarMascota(FILE *archi)
 
     printf("\n\t=================\n");
 
+    printf("\n(Ingrese un 0 para salir)\n");
+
     printf("\nNombre mascota: ");
     _flushall();
     gets(vec.nombre);
+
+    if (strcmp(vec.nombre, "0") == 0)
+    {
+        return;
+    }
 
     system("cls");
     datos = 1;
@@ -247,13 +192,13 @@ void AgregarMascota(FILE *archi)
     printf("\nFecha ingreso");
 
     printf("\n\tDia: ");
-    scanf("%d", &vec.Fecha.dia);
+    scanf("%d", &vec.fec.dia);
 
     printf("\tMes: ");
-    scanf("%d", &vec.Fecha.mes);
+    scanf("%d", &vec.fec.mes);
 
     printf("\tAnio: ");
-    scanf("%d", &vec.Fecha.anio);
+    scanf("%d", &vec.fec.anio);
 
     system("cls");
     datos = 5;
@@ -285,7 +230,10 @@ void AgregarMascota(FILE *archi)
 
 void ListarAnimales(FILE *archi)
 {
+    int contadorAnimales = 0;
+
     archi = fopen("Mascotas.dat", "r+b");
+
     mascota vec;
 
     rewind(archi);
@@ -296,18 +244,24 @@ void ListarAnimales(FILE *archi)
     {
         if (!feof(archi))
         {
-
             printf("Nombre de la Mascota: %s\n", vec.nombre);
             printf("Direccion: %s", vec.direcc);
             printf("\nDNI del duenio: %d", vec.DNI_DUENIO);
             printf("\nLocalidad: %s\n", vec.localidad);
-            printf("FECHA: %d/%d/%d\n", vec.Fecha.dia, vec.Fecha.mes, vec.Fecha.anio);
+            printf("FECHA: %d/%d/%d\n", vec.fec.dia, vec.fec.mes, vec.fec.anio);
             printf("\nPeso de la Mascota: %.2f", vec.peso);
             printf("\nNumero de telefono: %s", vec.numeroTel);
             printf("\n============================\n");
+
+            contadorAnimales++;
         }
 
         fread(&vec, sizeof(vec), 1, archi);
+    }
+
+    if (contadorAnimales == 0)
+    {
+        printf("\tNo hay mascotas registradas");
     }
 
     fclose(archi);
@@ -323,7 +277,7 @@ void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3)
     int datos = 0;
     mascota vec;
     turnos reg;
-    datosVete regi;
+    veterinario regi;
 
     int dni = 0, situacion[2];
     bool matCorrecta, dniValido = false;
@@ -334,11 +288,18 @@ void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3)
 
     printf("\n\t\t=================\n");
 
+    printf("\n(Ingrese un 0 para salir)\n");
+
     do
     {
         matCorrecta = true;
         printf("\nMatricula del Veterinario: ");
         scanf("%d", &reg.matriculaVet);
+
+        if (reg.matriculaVet == 0)
+        {
+            return;
+        }
 
         VerificarMatricula(reg.matriculaVet, situacion);
 
@@ -424,7 +385,7 @@ void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3)
 void ListarTurno(FILE *archi, FILE *archi2)
 {
     turnos reg;
-    datosVete regi;
+    veterinario regi;
 
     int mat = 0; //matricula del veterinario
     int situ[2], i = 1;
@@ -444,72 +405,69 @@ void ListarTurno(FILE *archi, FILE *archi2)
 
         if (mat == 0)
         {
-            break;
+            return;
         }
 
         if (VerificarMatricula(mat, situ))
         {
-            printf("Error: la matricula no corresponde a un veterinario registrado");
+            printf("\n\tError: la matricula no corresponde a un veterinario registrado");
             getch();
             matValida = false;
         }
     } while (!matValida);
 
-    if (mat != 0)
+    archi2 = fopen("Veterinarios.dat", "r+b");
+    archi = fopen("Turnos.dat", "r+b");
+
+    system("cls");
+
+    fread(&regi, sizeof(veterinario), 1, archi2);
+
+    while (!feof(archi2))
     {
-        archi2 = fopen("Veterinarios.dat", "r+b");
-        archi = fopen("Turnos.dat", "r+b");
-
-        system("cls");
-
-        fread(&regi, sizeof(datosVete), 1, archi2);
-
-        while (!feof(archi2))
+        if (mat == regi.matricula)
         {
-            if (mat == regi.matricula)
-            {
-                matEncontrada = true;
-                break;
-            }
-
-            fread(&regi, sizeof(datosVete), 1, archi2);
+            matEncontrada = true;
+            break;
         }
 
-        printf("Veterinario:\n");
-        printf("\t%20s: %s\n", "Nombre", regi.nomyApe);
-        printf("\t%20s: %d\n", "DNI", regi.DNI);
-
-        fread(&reg, sizeof(turnos), 1, archi);
-
-        if (matEncontrada)
-        {
-            while (!feof(archi))
-            {
-                if (!feof(archi) and reg.matriculaVet == mat)
-                {
-                    printf("\nTurno %d\n", i);
-                    printf("=========================\n");
-                    printf("Fecha: %d/%d/%d", reg.fec.dia, reg.fec.mes, reg.fec.anio);
-                    printf("\nDNI: %d", reg.DNIduenio);
-                    printf("\nDetalles: ");
-                    puts(reg.atencion);
-                    printf("\n=========================\n");
-
-                    i++;
-                }
-
-                fread(&reg, sizeof(turnos), 1, archi);
-            }
-
-            if (i == 1)
-            {
-                printf("\n\tNo se encontraron turnos");
-            }
-        }
-
-        getch();
-
-        fclose(archi);
-        fclose(archi2);
+        fread(&regi, sizeof(veterinario), 1, archi2);
     }
+
+    printf("Veterinario:\n");
+    printf("\t%20s: %s\n", "Nombre", regi.nomyApe);
+    printf("\t%20s: %d\n", "DNI", regi.DNI);
+
+    fread(&reg, sizeof(turnos), 1, archi);
+
+    if (matEncontrada)
+    {
+        while (!feof(archi))
+        {
+            if (!feof(archi) and reg.matriculaVet == mat)
+            {
+                printf("\nTurno %d\n", i);
+                printf("=========================\n");
+                printf("Fecha: %d/%d/%d", reg.fec.dia, reg.fec.mes, reg.fec.anio);
+                printf("\nDNI: %d", reg.DNIduenio);
+                printf("\nDetalles: ");
+                puts(reg.atencion);
+                printf("\n=========================\n\n");
+
+                i++;
+            }
+
+            fread(&reg, sizeof(turnos), 1, archi);
+        }
+
+        if (i == 1)
+        {
+            printf("\n\tNo se encontraron turnos");
+        }
+    }
+
+    getch();
+
+    fclose(archi);
+    fclose(archi2);
 }

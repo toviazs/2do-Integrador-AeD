@@ -24,6 +24,46 @@ struct veterinario
     char contrasenia[10];
 };
 
+struct fecha
+{
+    int dia;
+    int mes;
+    int anio;
+};
+
+struct turnos
+{
+    fecha fec;
+    int DNIduenio;
+    char atencion[380];
+    int matriculaVet; //la matricula del veterinario que lo atiende
+    bool borrado;
+};
+
+struct mascota
+{
+    char nombre[60];
+    char direcc[60];
+    int DNI_DUENIO;
+    char localidad[60];
+    fecha fec;
+    float peso;
+    char numeroTel[25];
+};
+
+struct rank
+{
+    char ApeNomVet[60];
+    int turnosAtendidos;
+    int matricula;
+};
+
+struct nodo
+{
+    rank info;
+    nodo *sig;
+};
+
 bool VerificarUsuarioNuevo(char Usuario[30], int situacion[5])
 {
     /*  Situaciones posibles
@@ -318,6 +358,191 @@ void AbrirGenerarArchivo(FILE *archi, char NombreArchivo[20])
             printf("Error: el archivo %s no existe y no se pudo crear", NombreArchivo);
             getch();
             exit(1);
+        }
+    }
+}
+
+void InsertarNodo(nodo *&puntero, rank valor)
+{
+    nodo *nuevo = new nodo();
+    nuevo->info = valor;
+
+    nodo *aux1 = puntero;
+    nodo *aux2;
+
+    while ((aux1 != NULL) and (aux1->info.turnosAtendidos > valor.turnosAtendidos))
+    {
+        aux2 = aux1;
+        aux1 = aux1->sig;
+    }
+
+    if (puntero == aux1)
+    {
+        puntero = nuevo;
+    }
+    else
+    {
+        aux2->sig = nuevo;
+    }
+
+    nuevo->sig = aux1;
+}
+
+void RecorrerLista(nodo *puntero)
+{
+    nodo *p = puntero;
+
+    int posicion = 1;
+
+    while (p != NULL)
+    {
+        printf("\n#%d _ \tVeterinario: %s", posicion, p->info.ApeNomVet);
+        printf("\n\tMatricula: %d", p->info.matricula);
+        printf("\n\tTurnos atendidos: %d\n", p->info.turnosAtendidos);
+        p = p->sig;
+        posicion++;
+    }
+}
+
+void InfoMascotaActual(mascota InfoMasc, int datos)
+{
+    printf("\tRegistrar Mascota");
+
+    printf("\n\t=================\n");
+
+    if (datos >= 1)
+    {
+        printf("\n%25s - %s\n", "Nombre mascota", InfoMasc.nombre);
+
+        if (datos >= 2)
+        {
+            printf("%25s - %s\n", "Direccion", InfoMasc.direcc);
+
+            if (datos >= 3)
+            {
+                printf("%25s - %d\n", "Dni duenio", InfoMasc.DNI_DUENIO);
+
+                if (datos >= 4)
+                {
+                    printf("%25s - %s\n", "Localidad", InfoMasc.localidad);
+
+                    if (datos >= 5)
+                    {
+                        printf("%25s - %d/%d/%d\n", "Fecha", InfoMasc.fec.dia, InfoMasc.fec.mes, InfoMasc.fec.anio);
+
+                        if (datos >= 6)
+                        {
+                            printf("%25s - %.2f kg\n", "Peso", InfoMasc.peso);
+
+                            if (datos >= 7)
+                            {
+                                printf("%25s - %s\n", "Telefono", InfoMasc.numeroTel);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void InfoTurnoActual(turnos InfoTurno, int datos)
+{
+    printf("\t\tRegistrar Turno");
+
+    printf("\n\t\t=================\n");
+
+    if (datos >= 1)
+    {
+        printf("\n%25s - %d\n", "Matricula veterinario", InfoTurno.matriculaVet);
+
+        if (datos >= 2)
+        {
+            printf("%25s - %d/%d/%d\n", "Fecha", InfoTurno.fec.dia, InfoTurno.fec.mes, InfoTurno.fec.anio);
+
+            if (datos >= 3)
+            {
+                printf("%25s - %d\n", "Dni duenio", InfoTurno.DNIduenio);
+            }
+        }
+    }
+}
+
+void InfoEvolucionActual(turnos InfoTurno, mascota InfoMascota, int datos)
+{
+    printf("\tRegistrar Evolucion de Mascota");
+
+    printf("\n\t=================================\n");
+
+    if (datos >= 1)
+    {
+        printf("\n%25s - %s\n", "Nombre mascota", InfoMascota.nombre);
+
+        if (datos >= 2)
+        {
+            printf("%25s - %s\n", "Detalles", InfoTurno.atencion);
+        }
+    }
+}
+
+void InfoVetActual(veterinario infoVet, int datos)
+{
+    printf("\tRegistrar Veterinario");
+
+    printf("\n\t=====================\n");
+
+    if (datos >= 1)
+    {
+        printf("\n%25s - %s\n", "Nombre", infoVet.nomyApe);
+
+        if (datos >= 2)
+        {
+            printf("%25s - %d\n", "Matricula", infoVet.matricula);
+
+            if (datos >= 3)
+            {
+                printf("%25s - %s\n", "Clave", infoVet.contrasenia);
+
+                if (datos >= 4)
+                {
+                    printf("%25s - %d\n", "DNI", infoVet.DNI);
+
+                    if (datos >= 5)
+                    {
+                        printf("%25s - %s\n", "Telefono", infoVet.telefono);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void InfoUserActual(user infoUser, int datos, int modulo)
+{
+    printf("\tRegistrar ");
+    if (modulo == 1)
+    {
+        printf("Administrador");
+        printf("\n\t=======================\n");
+    }
+    else
+    {
+        printf("Asistente");
+        printf("\n\t===================\n");
+    }
+
+    if (datos >= 1)
+    {
+        printf("\n%25s - %s\n", "Usuario", infoUser.usuario);
+
+        if (datos >= 2)
+        {
+            printf("%25s - %s\n", "Clave", infoUser.contrasenia);
+
+            if (datos >= 3)
+            {
+                printf("%25s - %s\n", "Nombre", infoUser.ApeNom);
+            }
         }
     }
 }
