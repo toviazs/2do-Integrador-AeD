@@ -3,7 +3,7 @@
 # Cátedra de Algoritmos y Estructuras de Datos
 
 <p align="center">
-<img src="https://upload.wikimedia.org/wikipedia/en/b/bd/UTN.png"/>
+<img src="https://i.postimg.cc/wTKHfJ25/UTNxPCN.png"/>
 </p>
 
 ## Introducción
@@ -26,13 +26,17 @@ En este segundo trabajo integrador se desarrollará una aplicación que permita 
 
 ### Módulo Consultorio
 
-Esta parte del proyecto estará dirigida a los diferentes profesionales que atienden y registran la evolución de las mascotas en una base de datos de historias clínicas. El sistema deberá contar con un listado de las mascotas que están registradas para ser atendidas ese día, para visualizarla, el veterinario deberá identificarse en el sistema por medio de su número de matrícula y contraseña y accediendo a la opción indicada. De esta manera el veterinario llamará por apellido y nombre a la mascotaque atenderá, una vez realizada esta tarea procede al ingreso de la evolución, en un texto de no más de 380 caracteres. Luego de realizada esta operación la mascota debe desaparecer del listado. Los datos de interés para el veterinario en este proceso son: Apellido y Nombres de la mascota (el apellido corresponde al dueño o familia), DNI del dueño, Localidad, Edad (calculada con la fecha de nacimiento registrada), y el Peso.
-La historia clínica de la mascota es común para todos los veterinarios, por lo tanto se deberá visualizar fecha de atentación de la misma y el nombre del veterinario que la redacto.
+Esta parte del proyecto estará dirigida a los diferentes profesionales que atienden y registran la evolución de las mascotas en una base de datos de historias clínicas. El sistema deberá contar con un listado de las mascotas que están registradas para ser atendidas ese día, para visualizarla, el veterinario deberá identificarse en el sistema por medio de su número de matrícula y contraseña y accediendo a la opción indicada. De esta manera el veterinario llamará por apellido y nombre a la mascota que atenderá, una vez realizada esta tarea procede al ingreso de la evolución, en un texto de no más de 380 caracteres. Luego de realizada esta operación, la mascota debe desaparecer del listado. Los datos de interés para el veterinario en este proceso son: Apellido y Nombre de la mascota (el apellido corresponde al dueño o familia), DNI del dueño, Localidad, Edad (calculada con la fecha de nacimiento registrada), y el Peso.
+La historia clínica de la mascota es común para todos los veterinarios, por lo tanto se deberá visualizar fecha de atención de la misma y el nombre del veterinario que la redacto.
 
 ### Módulo Recepción
 
-Este módulo satisface las necesidades del personal que asiste a los veterinarios en la atención al público. Desde aquí se hace ingreso de las mascotas, y la registración de los turnos. Esta aplicación debe permitir obtener un informe de las mascotas atendidos en determinada fecha por un determinado veterinario.
+Este módulo satisface las necesidades del personal que asiste a los veterinarios en la atención al público. Desde aquí se hace ingreso de las mascotas, y el registro de los turnos. Esta aplicación debe permitir obtener un informe de las mascotas atendidos en determinada fecha por un determinado veterinario.
 
 ### Módulo Administración
 
-La gerencia del centro veterinario es la encargada de realizar el alta de los veterinarios que trabajan en la institución, así como también de los empleados que realizan la registración de los turnos y mascotas. Es el área encargada desea visualizar las atenciones realizadas por los profesionales según las en el mes.Para incentivar a los veterinarios, la gerencia otorga un bono mensual al profesional que haya registrado la mayor cantidad de turnos en ese periodo.
+La gerencia del centro veterinario es la encargada de realizar el alta de los veterinarios que trabajan en la institución, así como también de los empleados que realizan el registro de los turnos y mascotas. Es el área encargada de visualizar las atenciones realizadas por los profesionales en el mes. Para incentivar a los veterinarios, la gerencia otorga un bono mensual al profesional que haya registrado la mayor cantidad de turnos en ese periodo.
+
+### Implemetación
+
+Para implementar los distintos módulos en un solo programa, se procedió de la siguiente manera: se codificaron por separado en archivos cpp la estructura correspondiente a cada módulo, luego, una vez obtenidos los .exe de cada uno, un menu principal se encargará de ejecutar el .exe que corresponda y así se tendra acceso a todos desde un solo lugar.
