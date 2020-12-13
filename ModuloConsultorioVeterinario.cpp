@@ -46,13 +46,13 @@ main()
 	{
 		system("cls");
 
-		printf("Modulo Consultorio Veterinario\n");
-		printf("================================\n\n");
+		printf("Modulo Veterinario\n");
+		printf("==================\n\n");
 
-		printf("1.- Visualizar Lista de Espera de Turnos (Informe)\n");
-		printf("2.- Registrar Evolucion de la Mascota\n\n");
+		printf("1. Visualizar lista de espera\n");
+		printf("2. Registrar evolucion mascota\n\n");
 
-		printf("3.- Cerrar sesion\n\n");
+		printf("3. Cerrar sesion\n\n");
 
 		printf("> ");
 		scanf("%d", &caso);
@@ -61,11 +61,9 @@ main()
 		{
 		case 1:
 			listaDeTurnos(archivo2, archivo3);
-			getch();
 			break;
 		case 2:
 			evolucionMascota(archivo, archivo2);
-			getch();
 			break;
 		case 3:
 			printf("\n\tSeguro que desea salir?");
@@ -111,7 +109,7 @@ void listaDeTurnos(FILE *archi, FILE *archi2)
 		printf("\n\t==================\n");
 
 		printf("\n(Ingrese 0 para salir)");
-		printf("\n\nIngrese matricula de Veterinario: ");
+		printf("\n\nMatricula veterinario: ");
 		scanf("%d", &mat);
 
 		if (mat == 0)
@@ -147,9 +145,11 @@ void listaDeTurnos(FILE *archi, FILE *archi2)
 			fread(&regi, sizeof(veterinario), 1, archi2);
 		}
 
-		printf("Veterinario:\n");
+		printf("\n\tVeterinario:\n");
 		printf("\t%20s: %s\n", "Nombre", regi.nomyApe);
 		printf("\t%20s: %d\n", "DNI", regi.DNI);
+
+		printf("\n\tTurnos:\n");
 
 		fread(&reg, sizeof(turnos), 1, archi);
 
@@ -159,11 +159,10 @@ void listaDeTurnos(FILE *archi, FILE *archi2)
 			{
 				if (!feof(archi) and reg.matriculaVet == mat and !reg.borrado)
 				{
-					printf("\nTurno %d\n", i);
-					printf("=========================\n");
-					printf("Fecha: %d/%d/%d", reg.fec.dia, reg.fec.mes, reg.fec.anio);
-					printf("\nDNI: %d", reg.DNIduenio);
-					i++;
+					printf("\n\t\tTurno %d\n", i);
+					printf("%30s: %d/%d/%d", "Fecha", reg.fec.dia, reg.fec.mes, reg.fec.anio);
+					printf("\n%30s: %d\n", "Dni", reg.DNIduenio);
+					printf("%30s: Pendiente\n", "Estado");
 				}
 
 				fread(&reg, sizeof(turnos), 1, archi);
@@ -187,50 +186,66 @@ void evolucionMascota(FILE *archivo, FILE *archivo2)
 	system("cls");
 	char apeynom[60], aux[380];
 	int opc = 0, datos = 0;
-	bool nombreValido = false, regEncontrado = false;
+	bool nombreValido = false; //veamos q onda
+	bool turnoPendiente = false;
 
-	printf("\tRegistrar Evolucion de Mascota");
+	printf("\t\tRegistrar Evolucion de Mascota");
 
-	printf("\n\t=================================\n");
+	printf("\n\t\t==============================\n");
 
-	archivo = fopen("Mascotas.dat", "rb");
+	archivo = fopen("Mascotas.dat", "r+b");
 	archivo2 = fopen("Turnos.dat", "r+b");
 
 	turnos reg;
 	mascota regi;
 
-	printf("\n(Ingrese un 0 para salir)");
-
 	do
 	{
-		printf("\nIngrese Apellido y Nombre de la mascota: ");
+		printf("\n(Ingrese un 0 para salir)");
+		printf("\n\nNombre mascota: ");
 		_flushall();
 		gets(apeynom);
 
-		rewind(archivo);
-		fread(&regi, sizeof(mascota), 1, archivo);
+		if (strcmp(apeynom, "0") == 0)
+		{
+			return;
+		}
+
+		fread(&regi, sizeof(regi), 1, archivo);
 
 		while (!feof(archivo))
 		{
 			if ((strcmp(regi.nombre, apeynom) == 0))
 			{
+				fread(&reg, sizeof(reg), 1, archivo2);
+
+				while (!feof(archivo2))
+				{
+					if ((reg.DNIduenio == regi.DNI_DUENIO) and (reg.borrado == false) and (strcmp(regi.nombre, apeynom) == 0))
+					{
+						turnoPendiente = true;
+						fseek(archivo2, (long)-sizeof(turnos), SEEK_CUR);
+						break;
+					}
+
+					fread(&reg, sizeof(reg), 1, archivo2);
+				}
+
 				nombreValido = true;
 				break;
 			}
 
-			fread(&regi, sizeof(mascota), 1, archivo);
+			fread(&regi, sizeof(regi), 1, archivo);
 		}
 
-		if (nombreValido)
+		if (!nombreValido)
 		{
-			continue;
+			printf("\nError: el nombre no corresponde a una mascota registrada");
+			getch();
+
+			system("cls");
+			InfoEvolucionActual(reg, regi, datos);
 		}
-
-		printf("\nEl apellido y nombre seleccionado no coincide con una mascota. Ingrese nuevamente");
-		getch();
-
-		system("cls");
-		InfoEvolucionActual(reg, regi, datos);
 
 	} while (!nombreValido);
 
@@ -238,63 +253,31 @@ void evolucionMascota(FILE *archivo, FILE *archivo2)
 	datos = 1;
 	InfoEvolucionActual(reg, regi, datos);
 
-	printf("\nDesea registrar un nuevo informe o dar de Alta (1- Dar de Alta) / 2 - (Registrar Nuevo Informe)): ");
-	scanf("%d", &opc);
-
-	do
+	if (turnoPendiente)
 	{
-		rewind(archivo2);
-		fread(&reg, sizeof(turnos), 1, archivo2);
+		printf("\n\tInforme: ");
+		_flushall();
+		gets(aux);
 
-		while (!feof(archivo2))
-		{
-			if (!reg.borrado and strcmp(apeynom, regi.nombre) == 0)
-			{
-				regEncontrado = true;
-				break;
-			}
+		strcpy(reg.atencion, aux);
 
-			fread(&reg, sizeof(turnos), 1, archivo2);
-		}
+		system("cls");
+		datos = 2;
+		InfoEvolucionActual(reg, regi, datos);
 
-		if (regEncontrado)
-		{
-			if (opc == 1)
-			{
-				reg.borrado = true;
+		reg.borrado = true;
 
-				fseek(archivo2, (long)-sizeof(turnos), SEEK_CUR);
-				fwrite(&reg, sizeof(turnos), 1, archivo2);
+		fwrite(&reg, sizeof(reg), 1, archivo2);
 
-				printf("\n\t----Mascota dada de alta con exito----");
-
-				break;
-			}
-
-			if (opc == 2)
-			{
-				printf("\nIngrese registro de la mascota: ");
-				_flushall();
-				gets(aux);
-
-				strcpy(reg.atencion, aux);
-
-				system("cls");
-				datos = 2;
-				InfoEvolucionActual(reg, regi, datos);
-
-				reg.borrado = true;
-
-				fseek(archivo2, (long)-sizeof(turnos), SEEK_CUR);
-				fwrite(&reg, sizeof(turnos), 1, archivo2);
-
-				printf("\n\t----Registro completado con exito----");
-
-				break;
-			}
-		}
-	} while (!regEncontrado);
+		printf("\n\t----Registro completado con exito----");
+	}
+	else
+	{
+		printf("\n\t-La mascota no tiene turnos pendientes-");
+	}
 
 	fclose(archivo);
 	fclose(archivo2);
+
+	getch();
 }

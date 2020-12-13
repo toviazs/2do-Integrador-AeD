@@ -49,6 +49,7 @@ struct mascota
     fecha fec;
     float peso;
     char numeroTel[25];
+    float edad;
 };
 
 struct rank
@@ -406,9 +407,9 @@ void RecorrerLista(nodo *puntero)
 
 void InfoMascotaActual(mascota InfoMasc, int datos)
 {
-    printf("\tRegistrar Mascota");
+    printf("\t\tRegistrar Mascota");
 
-    printf("\n\t=================\n");
+    printf("\n\t\t=================\n");
 
     if (datos >= 1)
     {
@@ -428,7 +429,11 @@ void InfoMascotaActual(mascota InfoMasc, int datos)
 
                     if (datos >= 5)
                     {
+                        int auxiliar = InfoMasc.edad;
+                        float auxiliar2 = (InfoMasc.edad - auxiliar) * 12;
+
                         printf("%25s - %d/%d/%d\n", "Fecha", InfoMasc.fec.dia, InfoMasc.fec.mes, InfoMasc.fec.anio);
+                        printf("%25s - %d anio/s y %d mes/es\n", "Edad", (int)InfoMasc.edad, (int)auxiliar2);
 
                         if (datos >= 6)
                         {
@@ -470,9 +475,9 @@ void InfoTurnoActual(turnos InfoTurno, int datos)
 
 void InfoEvolucionActual(turnos InfoTurno, mascota InfoMascota, int datos)
 {
-    printf("\tRegistrar Evolucion de Mascota");
+    printf("\t\tRegistrar Evolucion de Mascota");
 
-    printf("\n\t=================================\n");
+    printf("\n\t\t==============================\n");
 
     if (datos >= 1)
     {
@@ -487,9 +492,9 @@ void InfoEvolucionActual(turnos InfoTurno, mascota InfoMascota, int datos)
 
 void InfoVetActual(veterinario infoVet, int datos)
 {
-    printf("\tRegistrar Veterinario");
+    printf("\t\tRegistrar Veterinario");
 
-    printf("\n\t=====================\n");
+    printf("\n\t\t=====================\n");
 
     if (datos >= 1)
     {
@@ -519,16 +524,16 @@ void InfoVetActual(veterinario infoVet, int datos)
 
 void InfoUserActual(user infoUser, int datos, int modulo)
 {
-    printf("\tRegistrar ");
+    printf("\t\tRegistrar ");
     if (modulo == 1)
     {
         printf("Administrador");
-        printf("\n\t=======================\n");
+        printf("\n\t\t=======================\n");
     }
     else
     {
         printf("Asistente");
-        printf("\n\t===================\n");
+        printf("\n\t\t===================\n");
     }
 
     if (datos >= 1)

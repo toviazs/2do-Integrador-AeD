@@ -552,13 +552,13 @@ void BuscarTurnosAtendidos(FILE *arch1, FILE *arch2, nombreArchi archiVeterinari
 			fread(&infoVet, sizeof(infoVet), 1, arch1);
 		}
 
-		printf("Veterinario:\n");
+		printf("\n\tVeterinario:\n");
 		printf("\t%20s: %s\n", "Nombre", infoVet.nomyApe);
 		printf("\t%20s: %d\n", "DNI", infoVet.DNI);
 
 		fclose(arch1);
 
-		printf("\n\nTurnos atendidos:\n\n");
+		printf("\n\n\tTurnos atendidos:\n\n");
 
 		arch2 = fopen(archiTurnos, "r+b");
 
@@ -583,7 +583,7 @@ void BuscarTurnosAtendidos(FILE *arch1, FILE *arch2, nombreArchi archiVeterinari
 
 		if (contadorTurnosAtendidos == 0)
 		{
-			printf("\nEste veterinario no tiene turnos atendidos");
+			printf("\n\tEste veterinario no tiene turnos atendidos");
 		}
 
 		fclose(arch2);
