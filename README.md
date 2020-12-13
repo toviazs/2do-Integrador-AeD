@@ -13,7 +13,7 @@ El código aquí expuesto fue escrito tratando de cumplir con las buenas prácti
 
 ## Integrantes
 
-Los colaboradores de este repositorio corresponden a alumnos de primer año de Ingeniería en Sistemas de Información de la UTN - FRT:
+Los colaboradores de este repositorio corresponden a alumnos de primer año de Ingeniería en Sistemas de Información de la UTN - FRT, del ciclo lectivo 2020:
 
 1. [Paz Posse Tobías](https://github.com/toviazs)
 2. [Pérez Lucas Gustavo](https://github.com/lucasgp14)
@@ -37,6 +37,6 @@ Este módulo satisface las necesidades del personal que asiste a los veterinario
 
 La gerencia del centro veterinario es la encargada de realizar el alta de los veterinarios que trabajan en la institución, así como también de los empleados que realizan el registro de los turnos y mascotas. Es el área encargada de visualizar las atenciones realizadas por los profesionales en el mes. Para incentivar a los veterinarios, la gerencia otorga un bono mensual al profesional que haya registrado la mayor cantidad de turnos en ese periodo.
 
-### Implemetación
+### Implementación
 
-Para implementar los distintos módulos en un solo programa, se procedió de la siguiente manera: se codificaron por separado en archivos cpp la estructura correspondiente a cada módulo, luego, una vez obtenidos los .exe de cada uno, un menu principal se encargará de ejecutar el .exe que corresponda y así se tendra acceso a todos desde un solo lugar.
+Para implementar todos los módulos en un solo programa, se codificó en un archivo cpp cada módulo por separado, luego, una vez obtenido el .exe de cada uno, se armó un menu principal cuyo objetivo sea ejecutar los distintos .exe según el usuario que inicie sesión. De este modo, a partir del menu principal es posible acceder a todos los modulos, compartiendo archivos y registros, los cuales se difinieron en la librería de uso compartido para evitar inconvenientes.
