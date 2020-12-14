@@ -35,7 +35,7 @@ typedef char nombreArchi[20];
 void AgregarMascota(FILE *archi);
 void ListarAnimales(FILE *archi);
 void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3);
-void ListarTurno(FILE *archi, FILE *archi2);
+void ListarTurno(FILE *archi, FILE *archi2, FILE *archi3);
 
 main()
 {
@@ -88,7 +88,7 @@ main()
         case 4:
             system("cls");
 
-            ListarTurno(archivo2, archivo3);
+            ListarTurno(archivo2, archivo3, archivo);
             break;
         case 5:
             printf("\n\tSeguro que desea salir?");
@@ -374,10 +374,11 @@ void RegistrarTurno(FILE *archi, FILE *archi2, FILE *archi3)
     getch();
 }
 
-void ListarTurno(FILE *archi, FILE *archi2)
+void ListarTurno(FILE *archi, FILE *archi2, FILE *archi3)
 {
     turnos reg;
     veterinario regi;
+    mascota masc;
 
     int mat = 0; //matricula del veterinario
     int situ[2], i = 1, mes = 0, anio = 0;
@@ -409,6 +410,7 @@ void ListarTurno(FILE *archi, FILE *archi2)
         }
     } while (!matValida);
 
+    archi3 = fopen("Mascotas.dat", "r+b");
     archi2 = fopen("Veterinarios.dat", "r+b");
     archi = fopen("Turnos.dat", "r+b");
 
@@ -511,11 +513,26 @@ void ListarTurno(FILE *archi, FILE *archi2)
             {
                 printf("\nTurno %d\n", i);
                 printf("=========================\n");
-                printf("Fecha: %d/%d/%d", reg.fec.dia, reg.fec.mes, reg.fec.anio);
+                
+                fread(&masc, sizeof(mascota), 1, archi3);
+
+                while (!feof(archi3))
+                {
+                    if (reg.DNIduenio == masc.DNI_DUENIO)
+                    {
+                        printf("Mascota: %s", masc.nombre);
+                        break;
+                    }
+
+                    fread(&masc, sizeof(mascota), 1, archi3);
+                }
+
+                printf("\nFecha: %d/%d/%d", reg.fec.dia, reg.fec.mes, reg.fec.anio);
                 printf("\nDNI: %d", reg.DNIduenio);
                 printf("\nDetalles: ");
                 puts(reg.atencion);
                 printf("Estado: ");
+                
                 if (reg.borrado == true)
                 {
                     printf("Atendido");
@@ -546,4 +563,5 @@ void ListarTurno(FILE *archi, FILE *archi2)
 
     fclose(archi);
     fclose(archi2);
+    fclose(archi3);
 }

@@ -31,7 +31,7 @@ typedef char nombreArchi[20];
 
 //prototipos
 void evolucionMascota(FILE *archivo, FILE *archivo2);
-void listaDeTurnos(FILE *archivo2, FILE *archivo3);
+void listaDeTurnos(FILE *archi, FILE *archi2, FILE *archi3);
 
 main()
 {
@@ -60,7 +60,7 @@ main()
 		switch (caso)
 		{
 		case 1:
-			listaDeTurnos(archivo2, archivo3);
+			listaDeTurnos(archivo2, archivo3, archivo);
 			break;
 		case 2:
 			evolucionMascota(archivo, archivo2);
@@ -91,10 +91,11 @@ main()
 	fclose(archivo3);
 }
 
-void listaDeTurnos(FILE *archi, FILE *archi2)
+void listaDeTurnos(FILE *archi, FILE *archi2, FILE *archi3)
 {
 	turnos reg;
 	veterinario regi;
+	mascota masc;
 
 	int mat = 0; //matricula del veterinario
 	int situ[2], i = 1;
@@ -117,9 +118,10 @@ void listaDeTurnos(FILE *archi, FILE *archi2)
 			break;
 		}
 
-		if (VerificarMatricula(mat, situ))
+		VerificarMatricula(mat, situ);
+		if (situ[0] == 0)
 		{
-			printf("Error: la matricula no corresponde a un veterinario registrado");
+			printf("\n\tError: la matricula no corresponde a un veterinario registrado");
 			getch();
 			matValida = false;
 		}
@@ -127,6 +129,7 @@ void listaDeTurnos(FILE *archi, FILE *archi2)
 
 	if (mat != 0)
 	{
+		archi3 = fopen("Mascotas.dat", "r+b");
 		archi2 = fopen("Veterinarios.dat", "r+b");
 		archi = fopen("Turnos.dat", "r+b");
 
@@ -160,9 +163,25 @@ void listaDeTurnos(FILE *archi, FILE *archi2)
 				if (!feof(archi) and reg.matriculaVet == mat and !reg.borrado)
 				{
 					printf("\n\t\tTurno %d\n", i);
-					printf("%30s: %d/%d/%d", "Fecha", reg.fec.dia, reg.fec.mes, reg.fec.anio);
+					
+					fread(&masc, sizeof(mascota), 1, archi3);
+
+					while (!feof(archi3))
+					{
+						if(reg.DNIduenio == masc.DNI_DUENIO)
+						{
+							printf("%30s: %s", "Mascota", masc.nombre);
+							break;
+						}
+
+						fread(&masc, sizeof(mascota), 1, archi3);
+					}
+					
+					printf("\n%30s: %d/%d/%d", "Fecha", reg.fec.dia, reg.fec.mes, reg.fec.anio);
 					printf("\n%30s: %d\n", "Dni", reg.DNIduenio);
 					printf("%30s: Pendiente\n", "Estado");
+
+					i++;
 				}
 
 				fread(&reg, sizeof(turnos), 1, archi);
@@ -178,6 +197,7 @@ void listaDeTurnos(FILE *archi, FILE *archi2)
 
 		fclose(archi);
 		fclose(archi2);
+		fclose(archi3);
 	}
 }
 
