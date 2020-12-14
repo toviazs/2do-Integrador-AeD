@@ -76,10 +76,6 @@ main()
 			{
 				caso = 1;
 			}
-			else
-			{
-				system("MenuPrincipal.exe");
-			}
 
 			break;
 		}

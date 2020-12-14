@@ -32,8 +32,8 @@ main()
     do
     {
         system("cls");
-        printf("\t\tMenu Principal");
-        printf("\n\t\t..............");
+        printf("\t\tVeterinaria C Mais Mais");
+        printf("\n\t\t.......................");
 
         printf("\n\n1. Ingresar como Administrador");
         printf("\n2. Ingresar como Veterinario");

@@ -101,10 +101,6 @@ main()
             {
                 caso = 1;
             }
-            else
-            {
-                system("MenuPrincipal.exe");
-            }
 
             break;
         }
@@ -513,7 +509,7 @@ void ListarTurno(FILE *archi, FILE *archi2, FILE *archi3)
             {
                 printf("\nTurno %d\n", i);
                 printf("=========================\n");
-                
+
                 fread(&masc, sizeof(mascota), 1, archi3);
 
                 while (!feof(archi3))
@@ -532,7 +528,7 @@ void ListarTurno(FILE *archi, FILE *archi2, FILE *archi3)
                 printf("\nDetalles: ");
                 puts(reg.atencion);
                 printf("Estado: ");
-                
+
                 if (reg.borrado == true)
                 {
                     printf("Atendido");
