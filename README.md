@@ -3,7 +3,7 @@
 # Cátedra de Algoritmos y Estructuras de Datos
 
 <p align="center">
-<img src="https://i.postimg.cc/wTKHfJ25/UTNxPCN.png"/>
+<img src="https://i.postimg.cc/c4Pf9d5t/UTNxPCN.png"/>
 </p>
 
 ## Introducción

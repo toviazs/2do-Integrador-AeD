@@ -43,11 +43,10 @@ main()
 
         scanf("%d", &opcion);
 
-        system("cls");
-
         switch (opcion)
         {
         case 1:
+            system("cls");
             printf("\tLogin Administrador\n");
             printf("\t===================\n");
 
@@ -83,6 +82,7 @@ main()
 
             break;
         case 2:
+            system("cls");
             printf("\tLogin Veterinario\n");
             printf("\t=================\n");
 
@@ -117,6 +117,7 @@ main()
 
             break;
         case 3:
+            system("cls");
             printf("\tLogin Asistente\n");
             printf("\t===============\n");
 
