@@ -162,21 +162,32 @@ void listaDeTurnos(FILE *archi, FILE *archi2, FILE *archi3)
 			{
 				if (!feof(archi) and reg.matriculaVet == mat and !reg.borrado)
 				{
-					printf("\n\t\tTurno %d\n", i);
-					
+					printf("\n\t\tTurno %d\n\n", i);
+
 					fread(&masc, sizeof(mascota), 1, archi3);
 
 					while (!feof(archi3))
 					{
-						if(reg.DNIduenio == masc.DNI_DUENIO)
+						if (reg.DNIduenio == masc.DNI_DUENIO and !reg.borrado)
 						{
 							printf("%30s: %s", "Mascota", masc.nombre);
+							printf("\n%30s: %s", "Direccion", masc.direcc);
+							printf("\n%30s: %d", "Dni duenio", masc.DNI_DUENIO);
+							printf("\n%30s: %s\n", "Localidad", masc.localidad);
+							//Calculo de la edad en anios y meses
+							//===========================================
+							int auxiliar = masc.edad;
+							float auxiliar2 = (masc.edad - auxiliar) * 12;
+							//==========================================
+							printf("%30s: %d anio/s y %d mes/es", "Edad", (int)masc.edad, (int)auxiliar2);
+							printf("\n%30s: %.2f kg", "Peso", masc.peso);
+							printf("\n\t\t---------------------------------");
 							break;
 						}
 
 						fread(&masc, sizeof(mascota), 1, archi3);
 					}
-					
+
 					printf("\n%30s: %d/%d/%d", "Fecha", reg.fec.dia, reg.fec.mes, reg.fec.anio);
 					printf("\n%30s: %d\n", "Dni", reg.DNIduenio);
 					printf("%30s: Pendiente\n", "Estado");
